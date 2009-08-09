@@ -110,14 +110,6 @@ function Speedometer() {
     return theta * Math.PI / 180.0;
   }
 
-  function boxedArc (context, x, y, w, h, sa, sweepa)
-  {
-    context.save ();
-    context.scale (w / h, h / w);
-    context.arc (x+w/2, y+h/2, w/2, getRadian (sa), getRadian (sa + sweepa), false);
-    context.restore ();
-  }
-
   var fromAngle = 135.0;
   var toAngle = 405.0;
   var threshold = 40.0;
@@ -339,7 +331,7 @@ function Speedometer() {
     var gap = TheWidth * 0.03;
 
     context.beginPath();
-    boxedArc (context, x + gap, y + gap, w - gap * 2, h - gap * 2, 135, 270);
+    context.boxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2, getRadian (135), getRadian (270));
     context.stroke();
 
     // Draw Threshold
@@ -359,7 +351,7 @@ function Speedometer() {
       sweepAngle = 405 - stAngle;
 
     context.beginPath();
-    boxedArc (context, x + gap, y + gap, w - gap * 2, h - gap * 2, stAngle, sweepAngle);
+    context.boxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2, getRadian (stAngle), getRadian (sweepAngle));
     context.stroke ();
   }
 

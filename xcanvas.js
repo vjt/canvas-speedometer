@@ -61,6 +61,12 @@ var extend = {
         this.polygon (pts);
         this.stroke ();
     },
+    boxedArc: function(x, y, w, h, startAngle, sweepAngle) {
+      this.save ();
+      this.scale (w / h, h / w);
+      this.arc (x+w/2, y+h/2, w/2, startAngle, startAngle + sweepAngle, false);
+      this.restore ();
+    }
 };
 
 for(var key in extend)
