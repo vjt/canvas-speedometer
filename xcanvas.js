@@ -1,17 +1,4 @@
 (function(){
-var browser = {
-  match: function(re) {
-    return Boolean(navigator.userAgent.match(re));
-  },
-  ie:      function() { return browser.match(/IE/) },
-  webkit:  function() { return browser.match(/Webkit/) },
-  gecko:   function() { return browser.match(/Gecko/) },
-  opera:   function() { return browser.match(/Opera/) },
-  firefox: function() { return browser.gecko() },
-  safari:  function() { return browser.webkit() },
-  chrome:  function() { return browser.webkit() },
-};
-
 // Andrea Giammarchi - Mit Style License
 var extend = {
     // Circle methods
@@ -79,39 +66,40 @@ var extend = {
 for(var key in extend)
     CanvasRenderingContext2D.prototype[key] = extend[key];
 
-if (browser.gecko()) {
-  var gecko_quirks = {
+var quirks = {
     measureText: function(str) {
-      return this.mozMeasureText(str);
+        return this.mozMeasureText(str);
     },
     fillText: function(str, x, y) {
-      this.beginPath ();
-      this.drawText (str, x, y);
-      this.fill ();
+        this.beginPath ();
+        this.drawText (str, x, y);
+        this.fill ();
     },
     strokeText: function (str, x, y) {
-      this.beginPath ();
-      this.drawText (str, x, y);
-      this.stroke ();
+        this.beginPath ();
+        this.drawText (str, x, y);
+        this.stroke ();
     },
     drawText: function (str, x, y) {
-      if (this.font)
-        this.mozTextStyle = this.font;
+        if (this.font)
+            this.mozTextStyle = this.font;
 
-      if (this.textAlignment == 'center')
-        x -= this.measureText (str) / 2;
-      else if (this.textAlignment == 'right')
-        x = this.width - this.measureText(str);
+        if (this.textAlignment == 'center')
+            x -= this.measureText (str) / 2;
+        else if (this.textAlignment == 'right')
+            x = this.width - this.measureText(str);
 
-      this.save ();
-      this.translate (x, y);
-      this.mozPathText (str);
-      this.restore ();
+        this.save ();
+        this.translate (x, y);
+        this.mozPathText (str);
+        this.restore ();
     }
-  };
+};
 
-  for(var key in gecko_quirks)
-    CanvasRenderingContext2D.prototype[key] = gecko_quirks[key];
+for(var key in quirks) {
+    if (!CanvasRenderingContext2D.prototype[key]) {
+        CanvasRenderingContext2D.prototype[key] = quirks[key];
+    }
 }
 
 if(!this.G_vmlCanvasManager)
