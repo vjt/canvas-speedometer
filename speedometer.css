@@ -3,23 +3,9 @@ div#speedometer {
     height: 300px;
     position: fixed;
 }
-div#div_bg {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-}
-div#div_hand {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-}
-div#div_digit {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-}
-div#div_fg {
-    width: 300px;
-    height: 300px;
-    position: absolute;
+
+div#speedometer canvas {
+	width: inherit;
+	height: inherit;
+	position: absolute;
 }
