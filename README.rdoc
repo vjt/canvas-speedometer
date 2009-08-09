@@ -1,0 +1,12 @@
+h2. Canvas Speedometer
+
+This is a simple speedometer widget implemented using the standard HTML5 Canvas APIs.
+
+It has been tested on Webkit (Safari/Chrome) and Gecko (Firefox/Iceweasel/...). It currently doesn't work on IE.
+
+You can watch a demo "here":http://thebinaryelevator.com/t/speedometer.html.
+
+h2. Credits
+
+* Original code shared in the public domain by <anonymous>
+* Refactoring and firefox quirks by vjt@openssl.it
