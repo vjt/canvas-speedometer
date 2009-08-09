@@ -8,5 +8,5 @@ You can watch a demo "here":http://thebinaryelevator.com/t/speedometer.html.
 
 h2. Credits
 
-* Original code shared in the public domain by <anonymous>
+* Original code shared in the public domain by &lt;anonymous&gt;
 * Refactoring and firefox quirks by vjt@openssl.it
