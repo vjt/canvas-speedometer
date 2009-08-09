@@ -2,6 +2,23 @@
     <head>
         <script type="text/javascript" src="xcanvas.js"></script>
         <script type="text/javascript" src="speedometer.js"></script>
+        <script type="text/javascript">
+          function timedUpdate ()
+          {
+            for (var n = 0; n < 20; n++)
+              speedometer.update (0.03);
+
+            setTimeout ('timedUpdate()', 20);
+          }
+
+          var speedometer;
+          window.onload = function() {
+            speedometer = new Speedometer ();
+            speedometer.draw ();
+
+            timedUpdate ();
+          };
+        </script>
         <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
     </head>
     <body>

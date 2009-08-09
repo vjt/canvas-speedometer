@@ -57,7 +57,7 @@ function Speedometer() {
   var updateDir = 1;
   this.update = function ()
   {
-    var incr = 0.05;
+    var incr = arguments[0] || 0.05;
     if (updateDir > 0)
     {
       this.curValue += incr;
@@ -505,19 +505,3 @@ function Speedometer() {
   }
 };
 // End of class
-
-function timedUpdate ()
-{
-  for (var n = 0; n < 20; n++)
-    speedometer.update ();
-
-  setTimeout ('timedUpdate()', 20);
-}
-
-var speedometer;
-window.onload = function() {
-  speedometer = new Speedometer ();
-  speedometer.draw ();
-
-  timedUpdate ();
-};
