@@ -330,9 +330,8 @@ function Speedometer() {
     context.lineWidth = TheWidth / 40;
     var gap = TheWidth * 0.03;
 
-    context.beginPath();
-    context.boxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2, getRadian (135), getRadian (270));
-    context.stroke();
+    context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
+                            getRadian (135), getRadian (270), false);
 
     // Draw Threshold
     context.strokeStyle = 'LawnGreen';
@@ -350,9 +349,8 @@ function Speedometer() {
     if (stAngle + sweepAngle > 405)
       sweepAngle = 405 - stAngle;
 
-    context.beginPath();
-    context.boxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2, getRadian (stAngle), getRadian (sweepAngle));
-    context.stroke ();
+    context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
+                            getRadian (stAngle), getRadian (sweepAngle), false);
   }
 
   function offsetPolygon (x, y, points)

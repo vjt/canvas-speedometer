@@ -61,11 +61,21 @@ var extend = {
         this.polygon (pts);
         this.stroke ();
     },
-    boxedArc: function(x, y, w, h, startAngle, sweepAngle) {
-      this.save ();
-      this.scale (w / h, h / w);
-      this.arc (x+w/2, y+h/2, w/2, startAngle, startAngle + sweepAngle, false);
-      this.restore ();
+    boxedArc: function(x, y, w, h, startAngle, sweepAngle, counterClockWise) {
+        this.save ();
+        this.scale (w / h, h / w);
+        this.arc (x+w/2, y+h/2, w/2, startAngle, startAngle + sweepAngle, counterClockWise);
+        this.restore ();
+    },
+    fillBoxedArc: function(x, y, w, h, startAngle, sweepAngle) {
+        this.beginPath ();
+        this.boxedArc (x, y, w, h, startAngle, sweepAngle, counterClockWise);
+        this.fill ();
+    },
+    strokeBoxedArc: function(x, y, w, h, startAngle, sweepAngle, counterClockWise) {
+        this.beginPath ();
+        this.boxedArc (x, y, w, h, startAngle, sweepAngle, counterClockWise);
+        this.stroke ();
     }
 };
 
