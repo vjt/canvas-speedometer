@@ -4,9 +4,9 @@ This is a simple speedometer widget implemented using the standard HTML5 Canvas 
 
 It has been tested on Webkit (Safari/Chrome) and Gecko (Firefox/Iceweasel/...). It currently doesn't work on IE.
 
-You can watch a demo "here":http://thebinaryelevator.com/t/speedometer.html.
+You can watch a demo "here":http://sindro.me/t/speedometer/speedometer.html
 
 h2. Credits
 
-* Original code shared in the public domain by &lt;anonymous&gt;
-* Refactoring and firefox quirks by vjt@openssl.it
+* Original code shared in the public domain by &lt;anonymous&gt; on "http://thebinaryelevator.com/t/speedometer.html":http://thebinaryelevator.com/t/speedometer.html
+* Refactoring, object orientation of speedometer.js and firefox quirks workarounds on xcanvas.js by "vjt@openssl.it":http://sindro.me/
