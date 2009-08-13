@@ -15,10 +15,10 @@ function Speedometer() {
 
   var dialColor = options.dialColor || 'Gray';
 
-  var bgContext = _tbe_get2DContext ('speedometer_bg');
-  var handContext = _tbe_get2DContext ('speedometer_hand');
-  var digitContext = _tbe_get2DContext ('speedometer_digit');
-  var fgContext = _tbe_get2DContext ('speedometer_fg');
+  var bgContext = TBE.GetElement2DContextById ('speedometer_bg');
+  var handContext = TBE.GetElement2DContextById ('speedometer_hand');
+  var digitContext = TBE.GetElement2DContextById ('speedometer_digit');
+  var fgContext = TBE.GetElement2DContextById ('speedometer_fg');
 
   this.curValue = options.value || 0.0;
   this.minValue = options.min   || 0.0;
@@ -46,8 +46,8 @@ function Speedometer() {
       var w = width - x * 2;
       var h = height - y * 2;
 
-      _tbe_clearCanvas('speedometer_hand');
-      _tbe_clearCanvas('speedometer_digit');
+      TBE.ClearCanvas('speedometer_hand');
+      TBE.ClearCanvas('speedometer_digit');
 
       this.drawHand ((w / 2) + x, (h / 2) + y);
       this.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
@@ -82,34 +82,6 @@ function Speedometer() {
     this.updateHand ();
   }
 
-  //////////////////////
-  // Private functions
-  //
-
-  // Get a Canvas context, passing an element ID
-  //
-  function _tbe_get2DContext(elementId)
-  {
-    var elem = document.getElementById(elementId);
-
-    if (elem && elem.getContext)
-      return elem.getContext('2d');
-
-    return null;
-  }
-
-  // Clear a canvas, per w3c specification
-  //
-  function _tbe_clearCanvas(elementId)
-  {
-    document.getElementById(elementId).setAttribute ('width', TheWidth);
-  }
-
-  function getRadian (theta)
-  {
-    return theta * Math.PI / 180.0;
-  }
-
   var fromAngle = 135.0;
   var toAngle = 405.0;
   var threshold = 40.0;
@@ -123,13 +95,13 @@ function Speedometer() {
 
     var noOfParts = noOfDivisions + 1;
     var noOfIntermediates = noOfSubDivisions;
-    var currentAngle = getRadian (fromAngle);
+    var currentAngle = TBE.Deg2Rad (fromAngle);
     var gap = (TheWidth * 0.021);
     var shift = TheWidth / 25;
 
     var radius = (TheWidth - gap) / 2 - gap * 5;
     var totalAngle = toAngle - fromAngle;
-    var incr = getRadian (totalAngle / ( (noOfParts - 1) * (noOfIntermediates + 1)));
+    var incr = TBE.Deg2Rad (totalAngle / ( (noOfParts - 1) * (noOfIntermediates + 1)));
 
     var rulerValue = 0.0; // min
     for (i = 0; i <= noOfParts; i++)
@@ -258,7 +230,7 @@ function Speedometer() {
     val = ((toAngle - fromAngle) * val) / 100;
     val += fromAngle;
 
-    var angle = getRadian (val);
+    var angle = TBE.Deg2Rad (val);
     var gradientAngle = angle;
 
     // Fill Polygon
@@ -270,14 +242,14 @@ function Speedometer() {
     pts[4*2+0] = cx + radius * Math.cos (angle - 0.02);
     pts[4*2+1] = cy + radius * Math.sin (angle - 0.02);
 
-    angle = getRadian (val + 20);
+    angle = TBE.Deg2Rad (val + 20);
     pts[1*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
     pts[1*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
 
     pts[2*2+0] = cx;
     pts[2*2+1] = cy;
 
-    angle = getRadian (val - 20);
+    angle = TBE.Deg2Rad (val - 20);
     pts[3*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
     pts[3*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
 
@@ -287,11 +259,11 @@ function Speedometer() {
     // Draw Shine
     pts = new Array (3 * 2);
 
-    angle = getRadian (val);
+    angle = TBE.Deg2Rad (val);
     pts[0*2+0] = cx + radius * Math.cos (angle);
     pts[0*2+1] = cy + radius * Math.sin (angle);
 
-    angle = getRadian (val + 20);
+    angle = TBE.Deg2Rad (val + 20);
     pts[1*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
     pts[1*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
 
@@ -331,7 +303,8 @@ function Speedometer() {
     var gap = TheWidth * 0.03;
 
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
-                            getRadian (135), getRadian (270), false);
+                            TBE.Deg2Rad (135), TBE.Deg2Rad (270),
+                            /* counterclockwise = */ false);
 
     // Draw Threshold
     context.strokeStyle = 'LawnGreen';
@@ -350,7 +323,8 @@ function Speedometer() {
       sweepAngle = 405 - stAngle;
 
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
-                            getRadian (stAngle), getRadian (sweepAngle), false);
+                            TBE.Deg2Rad (stAngle), TBE.Deg2Rad (sweepAngle),
+                            /* counterclockwise = */ false);
   }
 
   function offsetPolygon (x, y, points)
@@ -423,7 +397,6 @@ function Speedometer() {
       break;
     }
   }
-
 
   function createSegments (height)
   {
