@@ -44,30 +44,28 @@ function Speedometer() {
     }
   }
 
-  this.updateHand = function ()
-  {
-    if (Context.hand && Display)
-    {
-      var w = Size - x * 2;
-      var h = Size - y * 2;
-
-      TBE.ClearCanvas ('speedometer_hand');
-
-      Display.clear();
-
-      this.drawHand ((w / 2) + x, (h / 2) + y);
-
-      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
-    }
-  }
-
   this.update = function (value)
   {
     if (value > MaxValue || value < MinValue)
       return false;
 
     CurValue = value;
-    this.updateHand ();
+
+    if (Context.hand)
+    {
+      var w = Size - x * 2;
+      var h = Size - y * 2;
+
+      TBE.ClearCanvas ('speedometer_hand');
+      this.drawHand ((w / 2) + x, (h / 2) + y);
+    }
+
+    if (Display)
+    {
+      Display.clear();
+      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+    }
+
     return true;
   }
 
