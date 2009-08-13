@@ -5,10 +5,36 @@
         <script type="text/javascript" src="digitaldisplay.js"></script>
         <script type="text/javascript" src="speedometer.js"></script>
         <script type="text/javascript">
+          var ClockWise = 1, CounterClockWise = 2;
+          var updateDir = ClockWise, incr = 0.15;
+
+          function incrementalUpdate () {
+
+            if (updateDir == ClockWise)
+            {
+              if (!speedometer.update (speedometer.value() + incr))
+              {
+                speedometer.update (speedometer.max());
+                updateDir = CounterClockWise;
+              }
+            }
+            else if (updateDir == CounterClockWise)
+            {
+              if (!speedometer.update (speedometer.value() - incr))
+              {
+                speedometer.update (speedometer.min());
+                updateDir = ClockWise;
+              }
+            }
+          }
+
+          function randomUpdate () {
+            speedometer.update (Math.random() * speedometer.max());
+          }
+
           function timedUpdate ()
           {
-            for (var n = 0; n < 20; n++)
-              speedometer.update (0.03);
+            incrementalUpdate ();
 
             setTimeout ('timedUpdate()', 20);
           }

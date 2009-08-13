@@ -14,8 +14,7 @@ function Speedometer() {
 
   var MinValue = options.min   || 0.0;
   var MaxValue = options.max   || 100.0;
-
-  this.value   = options.value || 0.0;
+  var CurValue = options.value || 0.0;
 
   var Context = {
     background: TBE.GetElement2DContextById ('speedometer_bg'),
@@ -41,7 +40,7 @@ function Speedometer() {
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
 
-      Display.drawNumber (this.value, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
@@ -52,42 +51,39 @@ function Speedometer() {
       var w = Size - x * 2;
       var h = Size - y * 2;
 
-      TBE.ClearCanvas('speedometer_hand');
+      TBE.ClearCanvas ('speedometer_hand');
 
       Display.clear();
 
       this.drawHand ((w / 2) + x, (h / 2) + y);
 
-      Display.drawNumber (this.value, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
-  var updateDir = 1;
-  this.update = function ()
+  this.update = function (value)
   {
-    var incr = arguments[0] || 0.05;
-    if (updateDir > 0)
-    {
-      this.value += incr;
-      if (this.value > MaxValue)
-      {
-        this.value = MaxValue;
-        updateDir = -1;
-        return;
-      }
-    }
-    else if (updateDir < 0)
-    {
-      this.value -= incr;
-      if (this.value < 0)
-      {
-        this.value = 0;
-        updateDir = 1;
-        return;
-      }
-    }
+    if (value > MaxValue || value < MinValue)
+      return false;
 
+    CurValue = value;
     this.updateHand ();
+    return true;
+  }
+
+  this.value = function ()
+  {
+    return CurValue;
+  }
+
+  this.min = function ()
+  {
+    return MinValue;
+  }
+
+  this.max = function ()
+  {
+    return MaxValue;
   }
 
   var fromAngle = 135.0;
@@ -234,7 +230,7 @@ function Speedometer() {
     var radius = Size / 2 - (Size * 0.12);
     var val = MaxValue - MinValue;
 
-    val = (MaxValue * (this.value - MinValue)) / val;
+    val = (MaxValue * (CurValue - MinValue)) / val;
     val = ((toAngle - fromAngle) * val) / 100;
     val += fromAngle;
 
