@@ -17,8 +17,13 @@ function Speedometer() {
 
   var bgContext = TBE.GetElement2DContextById ('speedometer_bg');
   var handContext = TBE.GetElement2DContextById ('speedometer_hand');
-  var digitContext = TBE.GetElement2DContextById ('speedometer_digit');
   var fgContext = TBE.GetElement2DContextById ('speedometer_fg');
+
+  var digitalDisplay = new DigitalDisplay ({
+    element: 'speedometer_digit',
+    dialColor: dialColor,
+    width: TheWidth
+  });
 
   this.curValue = options.value || 0.0;
   this.minValue = options.min   || 0.0;
@@ -35,22 +40,25 @@ function Speedometer() {
       this.drawHand ((w / 2) + x, (h / 2) + y);
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
-      this.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
+
+      digitalDisplay.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
     }
   }
 
   this.updateHand = function ()
   {
-    if (handContext && digitContext)
+    if (handContext && digitalDisplay)
     {
       var w = width - x * 2;
       var h = height - y * 2;
 
       TBE.ClearCanvas('speedometer_hand');
-      TBE.ClearCanvas('speedometer_digit');
+
+      digitalDisplay.clear();
 
       this.drawHand ((w / 2) + x, (h / 2) + y);
-      this.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
+
+      digitalDisplay.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
     }
   }
 
@@ -325,146 +333,6 @@ function Speedometer() {
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
                             TBE.Deg2Rad (stAngle), TBE.Deg2Rad (sweepAngle),
                             /* counterclockwise = */ false);
-  }
-
-  function offsetPolygon (x, y, points)
-  {
-    var npoints = points.length;
-    if (npoints & 1)
-      npoints--;
-    var result = new Array ();
-    for (var n = 0; n < npoints / 2; n++)
-    {
-      result[n*2+0] = x + points[n*2+0];
-      result[n*2+1] = y + points[n*2+1];
-    }
-    return result;
-  }
-
-
-  // Digits functions
-  //
-  this.drawSingleDigit = function (segs, bits, x, y)
-  {
-    for (var n = 0; n < 7; n++)
-    {
-      if (bits & (1 << n))
-      digitContext.fillPolygon (offsetPolygon (x, y, segs[n]));
-    }
-  }
-
-  var DigitsSegments = [
-    1 | 2 | 4 | 8 | 16 | 32,
-    2 | 4,
-    1 | 2 | 8 | 16 | 64,
-    1 | 2 | 4 | 8 | 64,
-    2 | 4 | 32 | 64,
-    1 | 4 | 8 | 32 | 64,
-    1 | 4 | 8 | 16 | 32 | 64,
-    1 | 2 | 4,
-    1 | 2 | 4 | 8 | 16 | 32 | 64,
-    1 | 2 | 4 | 8 | 32 | 64,
-  ];
-
-  this.drawNumber = function (value, x, y, len, height)
-  {
-    var context = digitContext;
-
-    var segs = createSegments (height);
-    var fixv = Math.round (value);
-    var decv = (value - fixv) * 100;
-
-    context.fillStyle = dialColor;
-    context.globalAlpha = 40.0 / 255.0;
-
-    var shift = 0, incr = 15 * TheWidth / 250;
-    for (var n = 0; n < len; n++)
-    {
-      this.drawSingleDigit (segs, 127, x + shift, y);
-      shift += incr;
-    }
-
-    shift -= incr;
-    context.fillStyle = 'Gray';
-    context.globalAlpha = 210.0/255.0;
-    for (var n = 0; n < len; n++)
-    {
-      this.drawSingleDigit (segs, DigitsSegments[(fixv % 10)], x + shift, y);
-      fixv = Math.floor (fixv / 10.0);
-      shift -= incr;
-      // Perform the check here so we output a 0
-      if (fixv == 0)
-      break;
-    }
-  }
-
-  function createSegments (height)
-  {
-    var width = 10 * height / 13;
-    var _x = function (xx) { return xx * width / 12; }
-    var _y = function (yy) { return yy * height / 15; }
-    var segments =
-    [ // Upper -
-      [
-        _x (2.8),  _y (1.0),
-        _x (10.0), _y (1.0),
-        _x (8.8),  _y (2.0),
-        _x (3.8),  _y (2.0),
-        _x (2.8),  _y (1.0)
-      ],
-      // Right Upper |
-      [
-        _x (10.0), _y (1.4),
-        _x (9.3),  _y (6.8),
-        _x (8.4),  _y (6.4),
-        _x (9.0),  _y (2.2),
-        _x (10.0), _y (1.4)
-      ],
-      // Right Lower |
-      [
-        _x (9.2),  _y (7.2),
-        _x (8.7),  _y (12.7),
-        _x (7.6),  _y (11.9),
-        _x (8.2),  _y (7.7),
-        _x (9.2),  _y (7.2)
-      ],
-      // Lower -
-      [
-        _x (7.4), _y (12.1),
-        _x (8.4), _y (13.0),
-        _x (1.3), _y (13.0),
-        _x (2.2), _y (12.1),
-        _x (7.4), _y (12.1)
-      ],
-      // Left Lower -
-      [
-        _x (2.2), _y (11.8),
-        _x (1.0), _y (12.7),
-        _x (1.7), _y (7.2),
-        _x (2.8), _y (7.7),
-        _x (2.2), _y (11.8)
-      ],
-      // Left Upper -
-      [
-        _x (3.0), _y (6.4),
-        _x (1.8), _y (6.8),
-        _x (2.6), _y (1.3),
-        _x (3.6), _y (2.2),
-        _x (3.0), _y (6.4)
-      ],
-      // Middle -
-      [
-        _x (2.0), _y (7.0),
-        _x (3.1), _y (6.5),
-        _x (8.3), _y (6.5),
-        _x (9.0), _y (7.0),
-        _x (8.2), _y (7.5),
-        _x (2.9), _y (7.5),
-        _x (2.0), _y (7.0)
-      ]
-    ];
-
-    return segments;
   }
 };
 // End of class
