@@ -5,13 +5,10 @@
 function Speedometer() {
   var options = arguments[0] || {};
 
-  var TheWidth = options.width || 300, TheHeight = options.height || 300;
+  var Size = options.size || options.width || 300;
 
   var x = options.x || 15;
   var y = options.y || 15;
-
-  var width = TheWidth;
-  var height = TheHeight;
 
   var dialColor = options.dialColor || 'Gray';
 
@@ -22,7 +19,7 @@ function Speedometer() {
   var digitalDisplay = new DigitalDisplay ({
     element: 'speedometer_digit',
     dialColor: dialColor,
-    width: TheWidth
+    width: Size
   });
 
   this.curValue = options.value || 0.0;
@@ -33,15 +30,15 @@ function Speedometer() {
   {
     if (bgContext && handContext && fgContext)
     {
-      var w = width - x * 2;
-      var h = height - y * 2;
+      var w = Size - x * 2;
+      var h = Size - y * 2;
 
       this.drawBackground (x, y, w, h);
       this.drawHand ((w / 2) + x, (h / 2) + y);
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
 
-      digitalDisplay.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
+      digitalDisplay.drawNumber (this.curValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
@@ -49,8 +46,8 @@ function Speedometer() {
   {
     if (handContext && digitalDisplay)
     {
-      var w = width - x * 2;
-      var h = height - y * 2;
+      var w = Size - x * 2;
+      var h = Size - y * 2;
 
       TBE.ClearCanvas('speedometer_hand');
 
@@ -58,7 +55,7 @@ function Speedometer() {
 
       this.drawHand ((w / 2) + x, (h / 2) + y);
 
-      digitalDisplay.drawNumber (this.curValue, (TheWidth / 2) - w / 8, h / 1.2, 3, TheWidth / 9);
+      digitalDisplay.drawNumber (this.curValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
@@ -104,10 +101,10 @@ function Speedometer() {
     var noOfParts = noOfDivisions + 1;
     var noOfIntermediates = noOfSubDivisions;
     var currentAngle = TBE.Deg2Rad (fromAngle);
-    var gap = (TheWidth * 0.021);
-    var shift = TheWidth / 25;
+    var gap = (Size * 0.021);
+    var shift = Size / 25;
 
-    var radius = (TheWidth - gap) / 2 - gap * 5;
+    var radius = (Size - gap) / 2 - gap * 5;
     var totalAngle = toAngle - fromAngle;
     var incr = TBE.Deg2Rad (totalAngle / ( (noOfParts - 1) * (noOfIntermediates + 1)));
 
@@ -117,24 +114,24 @@ function Speedometer() {
       // Draw Thick Line
       var x0 = (cx + radius * Math.cos (currentAngle));
       var y0 = (cy + radius * Math.sin (currentAngle));
-      var x1 = (cx + (radius - TheWidth/20) * Math.cos (currentAngle));
-      var y1 = (cy + (radius - TheHeight/20) * Math.sin (currentAngle));
+      var x1 = (cx + (radius - Size / 20) * Math.cos (currentAngle));
+      var y1 = (cy + (radius - Size / 20) * Math.sin (currentAngle));
 
       context.strokeStyle = 'black';
-      context.lineWidth = TheWidth/50;
+      context.lineWidth = Size / 50;
       context.beginPath ();
       context.moveTo (x0, y0);
       context.lineTo (x1, y1);
       context.stroke ();
 
       // Draw Strings
-      tx = cx + (radius - TheWidth / 10) * Math.cos (currentAngle);
-      ty = cy + gap / 2 + (radius - TheHeight / 10) * Math.sin (currentAngle);
+      tx = cx + (radius - Size / 10) * Math.cos (currentAngle);
+      ty = cy + gap / 2 + (radius - Size / 10) * Math.sin (currentAngle);
 
       context.fillStyle = 'Black';
       context.textAlign = 'center';
 
-      context.font = Math.round (TheWidth / 23) + 'pt Sans-Serif';
+      context.font = Math.round (Size / 23) + 'pt Sans-Serif';
       context.textAlignment = 'center';
       context.fillText (rulerValue, tx, ty);
 
@@ -150,11 +147,11 @@ function Speedometer() {
 
         var x0 = (cx + radius * Math.cos (currentAngle));
         var y0 = (cy + radius * Math.sin (currentAngle));
-        var x1 = (cx + (radius - TheWidth/50) * Math.cos (currentAngle));
-        var y1 = (cy + (radius - TheHeight/50) * Math.sin (currentAngle));
+        var x1 = (cx + (radius - Size / 50) * Math.cos (currentAngle));
+        var y1 = (cy + (radius - Size / 50) * Math.sin (currentAngle));
 
         context.strokeStyle = 'black';
-        context.lineWidth = TheWidth/100;
+        context.lineWidth = Size / 100;
         context.beginPath ();
         context.moveTo (x0, y0);
         context.lineTo (x1, y1);
@@ -167,10 +164,10 @@ function Speedometer() {
   {
     var context = fgContext;
 
-    var rX = width * 0.15;
-    var rY = y + height * 0.07;
-    var rW = width * 0.70;
-    var rH = height * 0.65;
+    var rX = Size * 0.15;
+    var rY = y + Size * 0.07;
+    var rW = Size * 0.70;
+    var rH = Size * 0.65;
 
     var g1 = context.createLinearGradient (0, 0, 0, rY+rH);
     g1.addColorStop (0, 'rgba(255,255,255,1.0)');
@@ -179,10 +176,10 @@ function Speedometer() {
     context.fillStyle = g1;
     context.fillEllipse (rX, rY, rW, rH);
 
-    rX = width * 0.30;
-    rY = y + height * 0.70;
-    rW = width * 0.40;
-    rH = height * 0.15;
+    rX = Size * 0.30;
+    rY = y + Size * 0.70;
+    rW = Size * 0.40;
+    rH = Size * 0.15;
 
     var g2 = context.createLinearGradient (0, rY, 0, rY + rH);
     g2.addColorStop (0, 'rgba(255,255,255,0.0)');
@@ -197,7 +194,7 @@ function Speedometer() {
   {
     var context = fgContext;
 
-    var shift = TheWidth / 5;
+    var shift = Size / 5;
 
     var rX = cx - (shift / 2);
     var rY = cy - (shift / 2);
@@ -212,7 +209,7 @@ function Speedometer() {
     context.fillStyle = g1;
     context.fillEllipse (rX, rY, rW, rH);
 
-    shift = TheWidth / 7;
+    shift = Size / 7;
 
     rX = cx - (shift / 2);
     rY = cy - (shift / 2);
@@ -231,7 +228,7 @@ function Speedometer() {
   {
     var context = handContext;
 
-    var radius = TheWidth / 2 - (TheWidth * 0.12);
+    var radius = Size / 2 - (Size * 0.12);
     var val = this.maxValue - this.minValue;
 
     val = (this.maxValue * (this.curValue - this.minValue)) / val;
@@ -251,15 +248,15 @@ function Speedometer() {
     pts[4*2+1] = cy + radius * Math.sin (angle - 0.02);
 
     angle = TBE.Deg2Rad (val + 20);
-    pts[1*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
-    pts[1*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
+    pts[1*2+0] = cx + (Size * 0.09) * Math.cos (angle);
+    pts[1*2+1] = cy + (Size * 0.09) * Math.sin (angle);
 
     pts[2*2+0] = cx;
     pts[2*2+1] = cy;
 
     angle = TBE.Deg2Rad (val - 20);
-    pts[3*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
-    pts[3*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
+    pts[3*2+0] = cx + (Size * 0.09) * Math.cos (angle);
+    pts[3*2+1] = cy + (Size * 0.09) * Math.sin (angle);
 
     context.fillStyle = 'black';
     context.fillPolygon (pts);
@@ -272,8 +269,8 @@ function Speedometer() {
     pts[0*2+1] = cy + radius * Math.sin (angle);
 
     angle = TBE.Deg2Rad (val + 20);
-    pts[1*2+0] = cx + (TheWidth * 0.09) * Math.cos (angle);
-    pts[1*2+1] = cy + (TheHeight * 0.09) * Math.sin (angle);
+    pts[1*2+0] = cx + (Size * 0.09) * Math.cos (angle);
+    pts[1*2+1] = cy + (Size * 0.09) * Math.sin (angle);
 
     pts[2*2+0] = cx;
     pts[2*2+1] = cy;
@@ -307,8 +304,8 @@ function Speedometer() {
 
     // Draw Colored Rim
     context.strokeStyle = 'Gainsboro';
-    context.lineWidth = TheWidth / 40;
-    var gap = TheWidth * 0.03;
+    context.lineWidth = Size / 40;
+    var gap = Size * 0.03;
 
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
                             TBE.Deg2Rad (135), TBE.Deg2Rad (270),
@@ -316,7 +313,7 @@ function Speedometer() {
 
     // Draw Threshold
     context.strokeStyle = 'LawnGreen';
-    context.lineWidth = TheWidth / 50;
+    context.lineWidth = Size / 50;
     // context.globalAlpha = 200.0 / 255.0;
 
     var val = this.maxValue - this.minValue
