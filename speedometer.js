@@ -10,25 +10,28 @@ function Speedometer() {
   var x = options.x || 15;
   var y = options.y || 15;
 
-  var dialColor = options.dialColor || 'Gray';
+  var DialColor = options.dialColor || 'Gray';
 
-  var bgContext = TBE.GetElement2DContextById ('speedometer_bg');
-  var handContext = TBE.GetElement2DContextById ('speedometer_hand');
-  var fgContext = TBE.GetElement2DContextById ('speedometer_fg');
+  var MinValue = options.min   || 0.0;
+  var MaxValue = options.max   || 100.0;
 
-  var digitalDisplay = new DigitalDisplay ({
+  this.value   = options.value || 0.0;
+
+  var Context = {
+    background: TBE.GetElement2DContextById ('speedometer_bg'),
+    foreground: TBE.GetElement2DContextById ('speedometer_fg'),
+    hand      : TBE.GetElement2DContextById ('speedometer_hand')
+  };
+
+  var Display = new DigitalDisplay ({
     element: 'speedometer_digit',
-    dialColor: dialColor,
+    dialColor: DialColor,
     width: Size
   });
 
-  this.curValue = options.value || 0.0;
-  this.minValue = options.min   || 0.0;
-  this.maxValue = options.max   || 100.0;
-
   this.draw = function ()
   {
-    if (bgContext && handContext && fgContext)
+    if (Context.background && Context.foreground && Context.hand)
     {
       var w = Size - x * 2;
       var h = Size - y * 2;
@@ -38,24 +41,24 @@ function Speedometer() {
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
 
-      digitalDisplay.drawNumber (this.curValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (this.value, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
   this.updateHand = function ()
   {
-    if (handContext && digitalDisplay)
+    if (Context.hand && Display)
     {
       var w = Size - x * 2;
       var h = Size - y * 2;
 
       TBE.ClearCanvas('speedometer_hand');
 
-      digitalDisplay.clear();
+      Display.clear();
 
       this.drawHand ((w / 2) + x, (h / 2) + y);
 
-      digitalDisplay.drawNumber (this.curValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (this.value, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
   }
 
@@ -65,20 +68,20 @@ function Speedometer() {
     var incr = arguments[0] || 0.05;
     if (updateDir > 0)
     {
-      this.curValue += incr;
-      if (this.curValue > this.maxValue)
+      this.value += incr;
+      if (this.value > MaxValue)
       {
-        this.curValue = this.maxValue;
+        this.value = MaxValue;
         updateDir = -1;
         return;
       }
     }
     else if (updateDir < 0)
     {
-      this.curValue -= incr;
-      if (this.curValue < 0)
+      this.value -= incr;
+      if (this.value < 0)
       {
-        this.curValue = 0;
+        this.value = 0;
         updateDir = 1;
         return;
       }
@@ -96,7 +99,7 @@ function Speedometer() {
 
   this.drawCalibration = function (cx, cy)
   {
-    var context = bgContext;
+    var context = Context.background;
 
     var noOfParts = noOfDivisions + 1;
     var noOfIntermediates = noOfSubDivisions;
@@ -135,7 +138,7 @@ function Speedometer() {
       context.textAlignment = 'center';
       context.fillText (rulerValue, tx, ty);
 
-      rulerValue = Math.round (rulerValue + ((this.maxValue - this.minValue) / (noOfParts - 1)));
+      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / (noOfParts - 1)));
 
       if (i == noOfParts - 1)
         break;
@@ -162,7 +165,7 @@ function Speedometer() {
 
   this.drawGloss = function ()
   {
-    var context = fgContext;
+    var context = Context.foreground;
 
     var rX = Size * 0.15;
     var rY = y + Size * 0.07;
@@ -192,7 +195,7 @@ function Speedometer() {
 
   this.drawCenter = function (cx, cy)
   {
-    var context = fgContext;
+    var context = Context.foreground;
 
     var shift = Size / 5;
 
@@ -204,7 +207,7 @@ function Speedometer() {
     var g1 = context.createLinearGradient (0, rY, 0, rY + rH);
     g1.addColorStop (0, 'rgba(0,0,0,1.0)');
     g1.addColorStop (0.5, 'rgba(0,0,0,1.0)');
-    g1.addColorStop (1, dialColor);
+    g1.addColorStop (1, DialColor);
 
     context.fillStyle = g1;
     context.fillEllipse (rX, rY, rW, rH);
@@ -226,12 +229,12 @@ function Speedometer() {
 
   this.drawHand = function (cx, cy)
   {
-    var context = handContext;
+    var context = Context.hand;
 
     var radius = Size / 2 - (Size * 0.12);
-    var val = this.maxValue - this.minValue;
+    var val = MaxValue - MinValue;
 
-    val = (this.maxValue * (this.curValue - this.minValue)) / val;
+    val = (MaxValue * (this.value - MinValue)) / val;
     val = ((toAngle - fromAngle) * val) / 100;
     val += fromAngle;
 
@@ -285,10 +288,10 @@ function Speedometer() {
 
   this.drawBackground = function (x, y, w, h)
   {
-    var context = bgContext;
+    var context = Context.background;
 
     // Draw background color
-    context.fillStyle = dialColor;
+    context.fillStyle = DialColor;
     context.ellipse (x, y, w, h);
     context.globalAlpha = 120.0 / 255.0;
     context.fill ();
@@ -316,8 +319,8 @@ function Speedometer() {
     context.lineWidth = Size / 50;
     // context.globalAlpha = 200.0 / 255.0;
 
-    var val = this.maxValue - this.minValue
-    val = (this.maxValue * (35.0 - this.minValue)) / val; // recommendval - min
+    var val = MaxValue - MinValue
+    val = (MaxValue * (35.0 - MinValue)) / val; // recommendval - min
     val = ((toAngle - fromAngle) * val) / 100;
     val += fromAngle;
     var stAngle = val - ((270 * threshold) / 200);
