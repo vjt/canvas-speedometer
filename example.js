@@ -21,7 +21,7 @@ function incrementalUpdate ()
   }
 }
 
-var Cycles = 50, CurrentCycle = Cycles, Target;
+var Cycles = 100, CurrentCycle = Cycles, Target;
 function randomUpdate ()
 {
   var value;

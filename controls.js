@@ -17,7 +17,7 @@ function Controls ()
     else if (mode_rand.checked)
       randomUpdate ();
 
-    timeout = setTimeout ('timedUpdate ()', 20);
+    timeout = setTimeout ('timedUpdate ()', 40);
   }
 
   this.start.onclick = function ()
