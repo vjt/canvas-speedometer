@@ -9,3 +9,8 @@ div#speedometer canvas {
 	height: inherit;
 	position: absolute;
 }
+
+div#controls {
+	position: absolute;
+	top: 320px;
+}

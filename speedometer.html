@@ -5,20 +5,16 @@
         <script type="text/javascript" src="digitaldisplay.js"></script>
         <script type="text/javascript" src="speedometer.js"></script>
         <script type="text/javascript" src="example.js"></script>
+        <script type="text/javascript" src="controls.js"></script>
         <script type="text/javascript">
           var speedometer;
           window.onload = function() {
             speedometer = new Speedometer ();
             speedometer.draw ();
 
-            timedUpdate ();
+            var controls = new Controls ();
+            controls.start.onclick ();
           };
-
-          function timedUpdate ()
-          {
-            incrementalUpdate ();
-            setTimeout ('timedUpdate()', 20);
-          }
         </script>
         <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
     </head>
@@ -28,6 +24,13 @@
           <canvas id="speedometer_digit" width="300" height="300"></canvas>
           <canvas id="speedometer_hand" width="300" height="300"></canvas>
           <canvas id="speedometer_fg" width="300" height="300"></canvas>
+        </div>
+        <div id="controls">
+          <input type="button" id="start" value="start" />
+          <input type="button" id="stop" value="stop" /><br />
+          Operating mode:
+          <input type="radio" name="mode" id="incremental" checked="checked" /> incremental
+          <input type="radio" name="mode" id="random" /> random
         </div>
     </body>
 </html>

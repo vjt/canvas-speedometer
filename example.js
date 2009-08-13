@@ -21,7 +21,21 @@ function incrementalUpdate ()
   }
 }
 
+var Cycles = 50, CurrentCycle = Cycles, Target;
 function randomUpdate ()
 {
-  speedometer.update (Math.random() * speedometer.max());
+  var value;
+  if (CurrentCycle == Cycles)
+  {
+    // Generate a new random value
+    Target = Math.random () * speedometer.max ();
+    incr = Math.abs (Target - speedometer.value ()) / Cycles;
+    CurrentCycle = 0;
+  }
+  value = speedometer.value () < Target ?
+    speedometer.value () + incr :
+    speedometer.value () - incr ;
+  CurrentCycle++;
+
+  speedometer.update (value);
 }
