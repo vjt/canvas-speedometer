@@ -4,41 +4,8 @@
         <script type="text/javascript" src="tbe.js"></script>
         <script type="text/javascript" src="digitaldisplay.js"></script>
         <script type="text/javascript" src="speedometer.js"></script>
+        <script type="text/javascript" src="example.js"></script>
         <script type="text/javascript">
-          var ClockWise = 1, CounterClockWise = 2;
-          var updateDir = ClockWise, incr = 0.15;
-
-          function incrementalUpdate () {
-
-            if (updateDir == ClockWise)
-            {
-              if (!speedometer.update (speedometer.value() + incr))
-              {
-                speedometer.update (speedometer.max());
-                updateDir = CounterClockWise;
-              }
-            }
-            else if (updateDir == CounterClockWise)
-            {
-              if (!speedometer.update (speedometer.value() - incr))
-              {
-                speedometer.update (speedometer.min());
-                updateDir = ClockWise;
-              }
-            }
-          }
-
-          function randomUpdate () {
-            speedometer.update (Math.random() * speedometer.max());
-          }
-
-          function timedUpdate ()
-          {
-            incrementalUpdate ();
-
-            setTimeout ('timedUpdate()', 20);
-          }
-
           var speedometer;
           window.onload = function() {
             speedometer = new Speedometer ();
@@ -46,6 +13,12 @@
 
             timedUpdate ();
           };
+
+          function timedUpdate ()
+          {
+            incrementalUpdate ();
+            setTimeout ('timedUpdate()', 20);
+          }
         </script>
         <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
     </head>
