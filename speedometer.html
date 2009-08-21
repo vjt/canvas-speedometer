@@ -9,7 +9,7 @@
         <script type="text/javascript">
           var speedometer;
           window.onload = function() {
-            speedometer = new Speedometer ();
+            speedometer = new Speedometer ({element: 'speedometer'});
             speedometer.draw ();
 
             var controls = new Controls ();
@@ -19,12 +19,7 @@
         <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
     </head>
     <body>
-        <div id="speedometer">
-          <canvas id="speedometer_bg" width="300" height="300"></canvas>
-          <canvas id="speedometer_digit" width="300" height="300"></canvas>
-          <canvas id="speedometer_hand" width="300" height="300"></canvas>
-          <canvas id="speedometer_fg" width="300" height="300"></canvas>
-        </div>
+        <div id="speedometer"></div>
         <div id="controls">
           <input type="button" id="start" value="start" />
           <input type="button" id="stop" value="stop" /><br />

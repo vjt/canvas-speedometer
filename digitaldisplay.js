@@ -2,12 +2,15 @@
 // Object orientation by vjt@openssl.it - http://sindro.me/
 //
 
-function DigitalDisplay(options) {
+function DigitalDisplay (options)
+{
   var element = options.element;
   var dialColor = options.dialColor || 'Gray';
   var width = options.width || 300;
 
-  var context = TBE.GetElement2DContextById (element);
+  var context = (typeof(element) == "string") ? 
+   TBE.GetElement2DContextById (element) :
+   TBE.GetElement2DContext (element);
 
   var DigitsSegments = [
     1 | 2 | 4 | 8 | 16 | 32,
@@ -22,8 +25,9 @@ function DigitalDisplay(options) {
     1 | 2 | 4 | 8 | 32 | 64,
   ];
 
-  this.clear = function () {
-    TBE.ClearCanvas(element);
+  this.clear = function ()
+  {
+    TBE.ClearCanvas (element);
   }
 
   this.drawNumber = function (value, x, y, len, height)

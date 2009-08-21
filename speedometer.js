@@ -4,11 +4,16 @@
 
 function Speedometer() {
   var options = arguments[0] || {};
+  var Container = document.getElementById(
+    options.element || 'speedometer'
+  );
 
-  var Size = options.size || options.width || 300;
+  if (!Container) throw('No container found!'); // XXX
 
-  var x = options.x || 15;
-  var y = options.y || 15;
+  var Size = /*options.size || options.width ||*/ 300;
+
+  var x = /*options.x ||*/ 15;
+  var y = /*options.y ||*/ 15;
 
   var DialColor = options.dialColor || 'Gray';
 
@@ -16,17 +21,33 @@ function Speedometer() {
   var MaxValue = options.max   || 100.0;
   var CurValue = options.value || 0.0;
 
+  var Canvas = {
+    background: TBE.CreateSquareCanvasElement (Size),
+    foreground: TBE.CreateSquareCanvasElement (Size),
+    hand      : TBE.CreateSquareCanvasElement (Size),
+    digits    : TBE.CreateSquareCanvasElement (Size)
+  };
+
   var Context = {
-    background: TBE.GetElement2DContextById ('speedometer_bg'),
-    foreground: TBE.GetElement2DContextById ('speedometer_fg'),
-    hand      : TBE.GetElement2DContextById ('speedometer_hand')
+    background: TBE.GetElement2DContext (Canvas.background),
+    foreground: TBE.GetElement2DContext (Canvas.foreground),
+    hand      : TBE.GetElement2DContext (Canvas.hand)
   };
 
   var Display = new DigitalDisplay ({
-    element: 'speedometer_digit',
+    element: Canvas.digits,
     dialColor: DialColor,
     width: Size
   });
+
+  // Now append the canvases into the given container
+  //
+  Container.appendChild (Canvas.background);
+  Container.appendChild (Canvas.digits);
+  Container.appendChild (Canvas.hand);
+  Container.appendChild (Canvas.foreground);
+
+  // Initialization done!
 
   this.draw = function ()
   {
@@ -56,18 +77,29 @@ function Speedometer() {
       var w = Size - x * 2;
       var h = Size - y * 2;
 
-      TBE.ClearCanvas ('speedometer_hand');
+      TBE.ClearCanvas (Canvas.hand);
       this.drawHand ((w / 2) + x, (h / 2) + y);
     }
 
     if (Display)
     {
-      Display.clear();
+      Display.clear ();
       Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
     }
 
     return true;
   }
+
+  /*
+  var step, FPS = 30;
+  this.animatedUpdate = function (value, time)
+  {
+    if (value < MinValue || value > MaxValue || value == CurValue ||  time <= 0.0)
+      return false;
+
+    step = Math.abs (value - CurValue) / FPS
+  }
+  */
 
   this.value = function ()
   {
