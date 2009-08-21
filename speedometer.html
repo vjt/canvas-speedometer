@@ -1,5 +1,7 @@
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
+
         <script type="text/javascript" src="xcanvas.js"></script>
         <script type="text/javascript" src="tbe.js"></script>
         <script type="text/javascript" src="digitaldisplay.js"></script>
@@ -8,15 +10,21 @@
         <script type="text/javascript" src="controls.js"></script>
         <script type="text/javascript">
           var speedometer;
-          window.onload = function() {
+          // Explicit onready listener for modern browsers. If you use a JS framework,
+          // you should replace this code with your toolkit's "onReady" helpers (e.g.
+          // $(document).ready() on jQuery, Event.observe('dom:loaded') on prototype,
+          // and so on.
+          document.addEventListener ("DOMContentLoaded", function() {
+            document.removeEventListener ("DOMContentLoaded", arguments.callee, false );
+
+            // Available options will be documented soon.
             speedometer = new Speedometer ({element: 'speedometer'});
-            speedometer.draw ();
+            speedometer.draw (); // API will be documented soon, as well :).
 
             var controls = new Controls ();
             controls.start.onclick ();
-          };
+          }, false);
         </script>
-        <link rel="stylesheet" type="text/css" href="speedometer.css" media="screen" />
     </head>
     <body>
         <div id="speedometer"></div>

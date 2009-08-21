@@ -3,7 +3,9 @@
 var TBE = {
   CreateCanvasElement: function ()
   {
-    return document.createElement('canvas');
+    var canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    return canvas;
   },
 
   CreateSquareCanvasElement: function (size)
@@ -11,10 +13,7 @@ var TBE = {
     var canvas = TBE.CreateCanvasElement ();
 
     canvas.setAttribute ('width', size);
-    //canvas.style.width = size + 'px';
-
     canvas.setAttribute ('height', size);
-    //canvas.style.height = size + 'px';
 
     return canvas;
   },
@@ -43,6 +42,16 @@ var TBE = {
 
     if (element)
       element.setAttribute ('width', element.getAttribute ('width'));
+  },
+
+  defaultView: null, // Cache defaultView (like jQuery does)
+  GetElementComputedStyle: function (element)
+  {
+    if (!this.defaultView) this.defaultView = document.defaultView; 
+    if (this.defaultView && this.defaultView.getComputedStyle)
+      return this.defaultView.getComputedStyle (element, null);
+
+    return null;
   },
 
   // Convert degrees to radians

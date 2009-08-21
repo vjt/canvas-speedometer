@@ -8,12 +8,18 @@ function Speedometer() {
     options.element || 'speedometer'
   );
 
-  if (!Container) throw('No container found!'); // XXX
+  if (!Container) throw ('No container found!'); // XXX
 
-  var Size = /*options.size || options.width ||*/ 300;
+  var ContainerStyle = TBE.GetElementComputedStyle (Container);
+  var Size = Math.min (
+    parseInt (ContainerStyle.width),
+    parseInt (ContainerStyle.height)
+  );
 
-  var x = /*options.x ||*/ 15;
-  var y = /*options.y ||*/ 15;
+  if (!Size) throw ('Cannot get container dimensions!');
+
+  var x = Size * 0.05;
+  var y = Size * 0.05;
 
   var DialColor = options.dialColor || 'Gray';
 
@@ -47,8 +53,11 @@ function Speedometer() {
   Container.appendChild (Canvas.hand);
   Container.appendChild (Canvas.foreground);
 
+  //
   // Initialization done!
 
+  // Draw everything (still to be refactored)
+  //
   this.draw = function ()
   {
     if (Context.background && Context.foreground && Context.hand)
@@ -90,7 +99,7 @@ function Speedometer() {
     return true;
   }
 
-  /*
+  /* XXX TODO
   var step, FPS = 30;
   this.animatedUpdate = function (value, time)
   {
