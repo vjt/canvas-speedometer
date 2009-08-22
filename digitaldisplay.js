@@ -8,9 +8,7 @@ function DigitalDisplay (options)
   var dialColor = options.dialColor || 'Gray';
   var width = options.width || 300;
 
-  var context = (typeof(element) == "string") ? 
-   TBE.GetElement2DContextById (element) :
-   TBE.GetElement2DContext (element);
+  var context = TBE.GetElement2DContext (element);
 
   var DigitsSegments = [
     1 | 2 | 4 | 8 | 16 | 32,
