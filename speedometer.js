@@ -21,7 +21,22 @@ function Speedometer() {
   var x = Size * 0.05;
   var y = Size * 0.05;
 
-  var DialColor = options.dialColor || 'Gray';
+  var theme = options.theme || {};
+
+  var Color = {
+    dial  : theme.dial   || 'Gray',
+    rim   : theme.rim    || 'SlateGray',
+    rimArc: theme.rimArc || 'Gainsboro',
+    thresh: theme.thresh || 'LawnGreen',
+    center: theme.center || 'Black',
+    nose  : theme.nose   || 'SlateGray',
+    hand  : {
+      main: theme.hand   || 'Black',
+      shineFrom: theme.handShineFrom || 'SlateGray',
+      shineTo:   theme.handShineTo   || 'Black'
+    }
+
+  };
 
   var MinValue = options.min   || 0.0;
   var MaxValue = options.max   || 100.0;
@@ -42,7 +57,7 @@ function Speedometer() {
 
   var Display = new DigitalDisplay ({
     element: Canvas.digits,
-    dialColor: DialColor,
+    dialColor: Color.dial,
     width: Size
   });
 
@@ -240,9 +255,9 @@ function Speedometer() {
     var rH = shift;
 
     var g1 = context.createLinearGradient (0, rY, 0, rY + rH);
-    g1.addColorStop (0, 'rgba(0,0,0,1.0)');
-    g1.addColorStop (0.5, 'rgba(0,0,0,1.0)');
-    g1.addColorStop (1, DialColor);
+    g1.addColorStop (0, Color.center);
+    g1.addColorStop (0.5, Color.center);
+    g1.addColorStop (1, Color.dial);
 
     context.fillStyle = g1;
     context.fillEllipse (rX, rY, rW, rH);
@@ -255,8 +270,8 @@ function Speedometer() {
     rH = shift;
 
     var g2 = context.createLinearGradient (rX, rY, rW + rX, rY + rH);
-    g2.addColorStop (0, 'SlateGray');
-    g2.addColorStop (1, 'Black');
+    g2.addColorStop (0, Color.nose);
+    g2.addColorStop (1, Color.center);
 
     context.fillStyle = g2;
     context.fillEllipse (rX, rY, rW, rH);
@@ -296,7 +311,7 @@ function Speedometer() {
     pts[3*2+0] = cx + (Size * 0.09) * Math.cos (angle);
     pts[3*2+1] = cy + (Size * 0.09) * Math.sin (angle);
 
-    context.fillStyle = 'black';
+    context.fillStyle = Color.hand.main;
     context.fillPolygon (pts);
 
     // Draw Shine
@@ -314,8 +329,8 @@ function Speedometer() {
     pts[2*2+1] = cy;
 
     var g1 = context.createLinearGradient (0, 0, cx, cy);
-    g1.addColorStop (0, 'SlateGray');
-    g1.addColorStop (1, 'Black');
+    g1.addColorStop (0, Color.hand.shineFrom);
+    g1.addColorStop (1, Color.hand.shineTo);
 
     context.fillStyle = g1;
     context.fillPolygon (pts);
@@ -326,13 +341,13 @@ function Speedometer() {
     var context = Context.background;
 
     // Draw background color
-    context.fillStyle = DialColor;
+    context.fillStyle = Color.dial;
     context.ellipse (x, y, w, h);
     context.globalAlpha = 120.0 / 255.0;
     context.fill ();
 
     // Draw Rim
-    context.strokeStyle = 'SlateGray';
+    context.strokeStyle = Color.rim;
     context.lineWidth = w * 0.03;
     context.ellipse (x, y, w, h);
     context.globalAlpha = 1.0;
@@ -341,7 +356,7 @@ function Speedometer() {
     this.drawCalibration ((w / 2) + x, (h / 2) + y);
 
     // Draw Colored Rim
-    context.strokeStyle = 'Gainsboro';
+    context.strokeStyle = Color.rimArc;
     context.lineWidth = Size / 40;
     var gap = Size * 0.03;
 
@@ -350,7 +365,7 @@ function Speedometer() {
                             /* counterclockwise = */ false);
 
     // Draw Threshold
-    context.strokeStyle = 'LawnGreen';
+    context.strokeStyle = Color.thresh;
     context.lineWidth = Size / 50;
     // context.globalAlpha = 200.0 / 255.0;
 
