@@ -11,53 +11,69 @@ function DigitalDisplay (options)
     digits:       options.digits       || 'Gray'
   };
 
+  var xScale = options.xScale || 0.6;
+  var yScale = options.yScale || 0.8;
+
   var context = TBE.GetElement2DContext (element);
 
   var DigitsSegments = [
-    1 | 2 | 4 | 8 | 16 | 32,
-    2 | 4,
-    1 | 2 | 8 | 16 | 64,
-    1 | 2 | 4 | 8 | 64,
-    2 | 4 | 32 | 64,
+    // 
+    //     1
+    //     --
+    //  2 |  | 4
+    //     --  8
+    // 16 |  | 32
+    //     --  
+    //     64
+    1 | 2 | 4 | 16 | 32 | 64,
+    4 | 32,
+    1 | 4 | 8 | 16 | 64,
     1 | 4 | 8 | 32 | 64,
-    1 | 4 | 8 | 16 | 32 | 64,
-    1 | 2 | 4,
+    2 | 4 | 8 | 32,
+    1 | 2 | 8 | 32 | 64,
+    1 | 2 | 8 | 16 | 32 | 64,
+    1 | 4 | 32,
     1 | 2 | 4 | 8 | 16 | 32 | 64,
-    1 | 2 | 4 | 8 | 32 | 64,
+    1 | 2 | 4 | 8 | 32 | 64
   ];
 
   this.clear = function ()
   {
     TBE.ClearCanvas (element);
   }
-
-  this.drawNumber = function (value, x, y, len, height)
+  
+  this.drawNumber = function (value, len, y, height)
   {
     var segs = createSegments (height);
     var fixv = Math.round (value);
     var decv = (value - fixv) * 100;
 
     context.fillStyle = Color.placeholders;
-    context.globalAlpha = 40.0 / 255.0;
+    context.globalAlpha = 0.15;
 
-    var shift = 0, incr = 15 * width / 250;
+    // Compute the increment for each digit.
+    var incr = height * xScale;
+
+    // offset relative to mid point of width
+    var off = ((width - (incr * len)) / 2.0);
+
+    // Draw shadow display
     for (var n = 0; n < len; n++)
     {
-      drawSingleDigit (segs, 127, x + shift, y);
-      shift += incr;
+      drawSingleDigit (segs, 127, off, y);
+      off += incr;
     }
 
-    shift -= incr;
     context.fillStyle = Color.digits;
-    context.globalAlpha = 210.0/255.0;
+    context.globalAlpha = 0.80;
     for (var n = 0; n < len; n++)
     {
-      drawSingleDigit (segs, DigitsSegments[(fixv % 10)], x + shift, y);
+      off -= incr;
+      drawSingleDigit (segs, DigitsSegments[(fixv % 10)], off, y);
       fixv = Math.floor (fixv / 10.0);
-      shift -= incr;
       // Perform the check here so we output a 0
       if (fixv == 0)
-      break;
+        break;
     }
   }
 
@@ -72,67 +88,66 @@ function DigitalDisplay (options)
 
   function createSegments (height)
   {
-    var width = 10 * height / 13;
-    var _x = function (xx) { return xx * width / 12; }
-    var _y = function (yy) { return yy * height / 15; }
+    var _x = function (xx) { return xx * height * xScale; }
+    var _y = function (yy) { return yy * height * yScale; }
     var segments =
-    [ // Upper -
+    [ // 1 Upper --
       [
-        _x (2.8),  _y (1.0),
-        _x (10.0), _y (1.0),
-        _x (8.8),  _y (2.0),
-        _x (3.8),  _y (2.0),
-        _x (2.8),  _y (1.0)
+        _x (0.28), _y (0.08),
+        _x (1.00), _y (0.08),
+        _x (0.88), _y (0.15),
+        _x (0.38), _y (0.15),
+        _x (0.28), _y (0.08)
       ],
-      // Right Upper |
+      // 2 Left Upper |
       [
-        _x (10.0), _y (1.4),
-        _x (9.3),  _y (6.8),
-        _x (8.4),  _y (6.4),
-        _x (9.0),  _y (2.2),
-        _x (10.0), _y (1.4)
+        _x (0.30), _y (0.49),
+        _x (0.18), _y (0.52),
+        _x (0.26), _y (0.10),
+        _x (0.36), _y (0.17),
+        _x (0.30), _y (0.49)
       ],
-      // Right Lower |
+      // 4 Right Upper |
       [
-        _x (9.2),  _y (7.2),
-        _x (8.7),  _y (12.7),
-        _x (7.6),  _y (11.9),
-        _x (8.2),  _y (7.7),
-        _x (9.2),  _y (7.2)
+        _x (1.00), _y (0.10),
+        _x (0.93), _y (0.52),
+        _x (0.84), _y (0.49),
+        _x (0.90), _y (0.17),
+        _x (1.00), _y (0.11)
       ],
-      // Lower -
+      // 8 Middle --
       [
-        _x (7.4), _y (12.1),
-        _x (8.4), _y (13.0),
-        _x (1.3), _y (13.0),
-        _x (2.2), _y (12.1),
-        _x (7.4), _y (12.1)
+        _x (0.20), _y (0.54),
+        _x (0.31), _y (0.50),
+        _x (0.83), _y (0.50),
+        _x (0.90), _y (0.54),
+        _x (0.82), _y (0.56),
+        _x (0.29), _y (0.56),
+        _x (0.20), _y (0.54)
       ],
-      // Left Lower -
+      // 16 Left Lower |
       [
-        _x (2.2), _y (11.8),
-        _x (1.0), _y (12.7),
-        _x (1.7), _y (7.2),
-        _x (2.8), _y (7.7),
-        _x (2.2), _y (11.8)
+        _x (0.22), _y (0.91),
+        _x (0.10), _y (0.98),
+        _x (0.17), _y (0.55),
+        _x (0.28), _y (0.59),
+        _x (0.22), _y (0.91)
       ],
-      // Left Upper -
+      // 32 Right Lower |
       [
-        _x (3.0), _y (6.4),
-        _x (1.8), _y (6.8),
-        _x (2.6), _y (1.3),
-        _x (3.6), _y (2.2),
-        _x (3.0), _y (6.4)
+        _x (0.92), _y (0.55),
+        _x (0.87), _y (0.98),
+        _x (0.78), _y (0.92),
+        _x (0.82), _y (0.59),
+        _x (0.92), _y (0.55)
       ],
-      // Middle -
+      // 64 Lower --
       [
-        _x (2.0), _y (7.0),
-        _x (3.1), _y (6.5),
-        _x (8.3), _y (6.5),
-        _x (9.0), _y (7.0),
-        _x (8.2), _y (7.5),
-        _x (2.9), _y (7.5),
-        _x (2.0), _y (7.0)
+        _x (0.74), _y (0.93),
+        _x (0.84), _y (1.00),
+        _x (0.13), _y (1.00),
+        _x (0.22), _y (0.93),
+        _x (0.74), _y (0.93)
       ]
     ];
 

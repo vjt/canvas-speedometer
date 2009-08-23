@@ -117,7 +117,7 @@ function Speedometer() {
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
 
-      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
     }
   }
 
@@ -140,7 +140,7 @@ function Speedometer() {
     if (Display)
     {
       Display.clear ();
-      Display.drawNumber (CurValue, (Size / 2) - w / 8, h / 1.2, 3, Size / 9);
+      Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
     }
 
     return true;
