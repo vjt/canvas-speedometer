@@ -14,4 +14,4 @@ Me ("vjt@openssl.it":http://sindro.me/) did:
 
 * Refactoring, object orientation and firefox quirks workarounds on xcanvas.js
 * Theming support
-* Documentation
+* "Documentation":http://wiki.github.com/vjt/canvas-speedometer
