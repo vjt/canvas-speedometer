@@ -309,7 +309,7 @@ function Speedometer() {
     var val = MaxValue - MinValue;
 
     val = (MaxValue * (CurValue - MinValue)) / val;
-    val = ((toAngle - fromAngle) * val) / 100;
+    val = ((toAngle - fromAngle) * val) / MaxValue;
     val += fromAngle;
 
     var angle = TBE.Deg2Rad (val);
@@ -395,12 +395,12 @@ function Speedometer() {
 
     var val = MaxValue - MinValue
     val = (MaxValue * (ThreshPivot - MinValue)) / val; // recommendval - min
-    val = ((toAngle - fromAngle) * val) / 100;
+    val = ((toAngle - fromAngle) * val) / MaxValue;
     val += fromAngle;
-    var stAngle = val - ((270 * Threshold) / 200);
+    var stAngle = val - ((270 * Threshold) / MaxValue / 2);
     if (stAngle <= 135)
       stAngle = 135;
-    var sweepAngle = ((270 * Threshold) / 100);
+    var sweepAngle = ((270 * Threshold) / MaxValue);
     if (stAngle + sweepAngle > 405)
       sweepAngle = 405 - stAngle;
 
