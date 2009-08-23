@@ -1,0 +1,53 @@
+h2. Abstract
+
+Theming of the speedometer is carried out via theme objects defined into a separate javascript
+file, then included in the HTML source and then referenced in the constructor.
+
+The theme name is specified into the theme file, with the following scheme: <code>Speedometer.themes.NAME</code>.
+
+You can name your theme by using any allowed javascript variable name (e.g. letters, numbers, and underscores).
+
+*Example*:
+
+h3. <code>themes/wonderful.js</code>
+
+<pre><code>Speedometer.themes.my_wonderful_theme = {
+  /* .... */
+}
+</code></pre>
+
+h3. <code>speedometer.html</code>
+
+<pre><code><script type="text/javascript" src="themes/wonderful.js"></script>
+<script type="text/javascript">
+  var speedometer = new Speedometer({ element: 'antani', theme: 'my_wonderful_theme' });
+</script>
+</code></pre>
+
+h2. Default theme, name specification
+
+You can find the default theme into `themes/default.js`, and here follows:
+
+<pre><code>Speedometer.themes.default = {
+  dial       : 'Gray',
+  rim        : 'SlateGray',
+  rimArc     : 'Gainsboro',
+  thresh     : 'LawnGreen',
+  center     : 'Black',
+  nose       : 'SlateGray',
+  hand       : 'Black',
+  handShine  : 'SlateGray',
+  handShineTo: 'Black',
+  ticks      : 'Black',
+  marks      : 'Black',
+  strings    : 'Black',
+  digits     : 'Black',
+  font       : 'Sans-Serif'
+};
+</code></pre>
+
+h2. Contributing themes
+
+New themes are, of course, gladly accepted! You can send them to "me":http://github.com/vjt via message via github, using a "gist":http://gist.github.com, drop me a note via e-mail ("vjt@openssl.it":mailto:vjt@openssl.it), or even using "IP over Pigeon":http://en.wikipedia.org/wiki/IP_over_Avian_Carriers.
+
+Thanks in advance! :)
