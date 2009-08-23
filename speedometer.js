@@ -21,6 +21,13 @@ function Speedometer() {
   var Threshold   = options.threshold      || 50.0;
   var ThreshPivot = options.thresholdPivot || 35.0;
 
+  // Meter, and correct user coords (cartesian) to the canvas std plane coords
+  var MeterFromAngle = (options.meterFromAngle || -135.0) - 90.0;
+  var MeterToAngle   = (options.meterToAngle   ||  135.0) - 90.0;
+  var MeterRimAngle  = MeterToAngle - MeterFromAngle;
+
+  // Correct given coords (cartesian) to the canvas std plane
+
   // Container CSS inspection to get computed size
   var ContainerStyle = TBE.GetElementComputedStyle (Container);
   var Size = Math.min (
@@ -165,8 +172,6 @@ function Speedometer() {
     return MaxValue;
   }
 
-  var fromAngle = 135.0;
-  var toAngle = 405.0;
   var noOfDivisions = 10;
   var noOfSubDivisions = 3;
   var glossinessAlpha = 25 / 255.0;
@@ -177,12 +182,12 @@ function Speedometer() {
 
     var noOfParts = noOfDivisions + 1;
     var noOfIntermediates = noOfSubDivisions;
-    var currentAngle = TBE.Deg2Rad (fromAngle);
+    var currentAngle = TBE.Deg2Rad (MeterFromAngle);
     var gap = (Size * 0.02);
     var shift = Size / 25;
 
     var radius = (Size - gap) / 2 - gap * 5;
-    var totalAngle = toAngle - fromAngle;
+    var totalAngle = MeterToAngle - MeterFromAngle;
     var incr = TBE.Deg2Rad (totalAngle / ( (noOfParts - 1) * (noOfIntermediates + 1)));
 
     var rulerValue = 0.0; // min
@@ -309,8 +314,8 @@ function Speedometer() {
     var val = MaxValue - MinValue;
 
     val = (MaxValue * (CurValue - MinValue)) / val;
-    val = ((toAngle - fromAngle) * val) / MaxValue;
-    val += fromAngle;
+    val = ((MeterToAngle - MeterFromAngle) * val) / MaxValue;
+    val += MeterFromAngle;
 
     var angle = TBE.Deg2Rad (val);
     var gradientAngle = angle;
@@ -385,7 +390,7 @@ function Speedometer() {
     var gap = Size * 0.03;
 
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
-                            TBE.Deg2Rad (135), TBE.Deg2Rad (270),
+                            TBE.Deg2Rad (MeterFromAngle), TBE.Deg2Rad (MeterRimAngle),
                             /* counterclockwise = */ false);
 
     // Draw Threshold
@@ -395,14 +400,14 @@ function Speedometer() {
 
     var val = MaxValue - MinValue
     val = (MaxValue * (ThreshPivot - MinValue)) / val; // recommendval - min
-    val = ((toAngle - fromAngle) * val) / MaxValue;
-    val += fromAngle;
-    var stAngle = val - ((270 * Threshold) / MaxValue / 2);
-    if (stAngle <= 135)
-      stAngle = 135;
-    var sweepAngle = ((270 * Threshold) / MaxValue);
-    if (stAngle + sweepAngle > 405)
-      sweepAngle = 405 - stAngle;
+    val = ((MeterToAngle - MeterFromAngle) * val) / MaxValue;
+    val += MeterFromAngle;
+    var stAngle = val - ((MeterRimAngle * Threshold) / MaxValue / 2);
+    if (stAngle <= MeterFromAngle)
+      stAngle = MeterFromAngle;
+    var sweepAngle = ((MeterRimAngle * Threshold) / MaxValue);
+    if (stAngle + sweepAngle > MeterToAngle)
+      sweepAngle = MeterToAngle - stAngle;
 
     context.strokeBoxedArc (x + gap, y + gap, w - gap * 2, h - gap * 2,
                             TBE.Deg2Rad (stAngle), TBE.Deg2Rad (sweepAngle),
