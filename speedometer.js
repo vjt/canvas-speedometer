@@ -15,7 +15,7 @@ function Speedometer() {
   // Customization
   var MinValue = options.min   || 0.0;
   var MaxValue = options.max   || 100.0;
-  var CurValue = options.value || 0.0;
+  var CurValue = options.value || MinValue;
 
   // Threshold
   var Threshold   = options.threshold      || 50.0;
@@ -190,7 +190,7 @@ function Speedometer() {
     var totalAngle = MeterToAngle - MeterFromAngle;
     var incr = TBE.Deg2Rad (totalAngle / ( (ticksCount - 1) * (smallTicksCount + 1)));
 
-    var rulerValue = 0.0; // min
+    var rulerValue = MinValue;
     for (i = 0; i <= ticksCount; i++)
     {
       // Draw Thick Line
