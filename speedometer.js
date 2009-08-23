@@ -33,7 +33,13 @@ function Speedometer() {
     hand  : {
       main: theme.hand   || 'Black',
       shineFrom: theme.handShineFrom || 'SlateGray',
-      shineTo:   theme.handShineTo   || 'Black'
+      shineTo  : theme.handShineTo   || 'Black'
+    },
+    calib : {
+      ticks  : theme.ticks   || 'Black',
+      divs   : theme.divs    || 'Black',
+      strings: theme.strings || 'Black',
+      font   : theme.font    || 'Sans-Serif'
     }
 
   };
@@ -170,7 +176,7 @@ function Speedometer() {
       var x1 = (cx + (radius - Size / 20) * Math.cos (currentAngle));
       var y1 = (cy + (radius - Size / 20) * Math.sin (currentAngle));
 
-      context.strokeStyle = 'black';
+      context.strokeStyle = Color.calib.ticks;
       context.lineWidth = Size / 50;
       context.beginPath ();
       context.moveTo (x0, y0);
@@ -181,7 +187,7 @@ function Speedometer() {
       tx = cx + (radius - Size / 10) * Math.cos (currentAngle);
       ty = cy + gap / 2 + (radius - Size / 10) * Math.sin (currentAngle);
 
-      context.fillStyle = 'Black';
+      context.fillStyle = Color.calib.strings;
       context.textAlign = 'center';
 
       context.font = Math.round (Size / 23) + 'pt Sans-Serif';
@@ -203,7 +209,7 @@ function Speedometer() {
         var x1 = (cx + (radius - Size / 50) * Math.cos (currentAngle));
         var y1 = (cy + (radius - Size / 50) * Math.sin (currentAngle));
 
-        context.strokeStyle = 'black';
+        context.strokeStyle = Color.calib.divs;
         context.lineWidth = Size / 100;
         context.beginPath ();
         context.moveTo (x0, y0);
