@@ -176,7 +176,7 @@ function Speedometer() {
   var noOfSubDivisions = 3;
   var glossinessAlpha = 25 / 255.0;
 
-  this.drawCalibration = function (cx, cy)
+  this.drawMeter = function (cx, cy)
   {
     var context = Context.background;
 
@@ -382,7 +382,7 @@ function Speedometer() {
     context.globalAlpha = 1.0;
     context.stroke ();
 
-    this.drawCalibration ((w / 2) + x, (h / 2) + y);
+    this.drawMeter ((w / 2) + x, (h / 2) + y);
 
     // Draw Colored Rim
     context.strokeStyle = Color.rimArc;
