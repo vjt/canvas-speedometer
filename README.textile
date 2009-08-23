@@ -8,5 +8,10 @@ You can watch a demo "here":http://sindro.me/t/speedometer/speedometer.html
 
 h2. Credits
 
-* Original code shared in the public domain by &lt;anonymous&gt; on "http://thebinaryelevator.com/t/speedometer.html":http://thebinaryelevator.com/t/speedometer.html
-* Refactoring, object orientation of speedometer.js and firefox quirks workarounds on xcanvas.js by "vjt@openssl.it":http://sindro.me/
+Original code shared in the public domain by &lt;anonymous&gt; on the 'net
+
+Me ("vjt@openssl.it":http://sindro.me/) did:
+
+* Refactoring, object orientation and firefox quirks workarounds on xcanvas.js
+* Theming support
+* Documentation

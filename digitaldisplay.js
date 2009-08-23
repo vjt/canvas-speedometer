@@ -1,7 +1,6 @@
-// Original code taken from http://www.thebinaryelevator.com/t/speedometer.html
-// Object orientation by vjt@openssl.it - http://sindro.me/
+// Original code shared in the public domain on the 'net by <anonymous>
+// Further work by vjt@openssl.it - http://sindro.me/
 //
-
 function DigitalDisplay (options)
 {
   var element = options.element;
