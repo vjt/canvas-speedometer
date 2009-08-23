@@ -5,8 +5,11 @@
 
         <script type="text/javascript" src="xcanvas.js"></script>
         <script type="text/javascript" src="tbe.js"></script>
+
         <script type="text/javascript" src="digitaldisplay.js"></script>
         <script type="text/javascript" src="speedometer.js"></script>
+        <script type="text/javascript" src="themes/default.js"></script>
+
         <script type="text/javascript" src="example.js"></script>
         <script type="text/javascript" src="controls.js"></script>
         <script type="text/javascript">
@@ -19,7 +22,7 @@
             document.removeEventListener ("DOMContentLoaded", arguments.callee, false );
 
             // Available options will be documented soon.
-            speedometer = new Speedometer ({element: 'speedometer'});
+            speedometer = new Speedometer ({element: 'speedometer', theme: 'default'});
             speedometer.draw (); // API will be documented soon, as well :).
 
             var controls = new Controls ();

@@ -4,12 +4,14 @@
 
 function Speedometer() {
   var options = arguments[0] || {};
+
   var Container = document.getElementById(
     options.element || 'speedometer'
   );
 
   if (!Container) throw ('No container found!'); // XXX
 
+  // Container CSS inspection to get computed size
   var ContainerStyle = TBE.GetElementComputedStyle (Container);
   var Size = Math.min (
     parseInt (ContainerStyle.width),
@@ -21,27 +23,35 @@ function Speedometer() {
   var x = Size * 0.05;
   var y = Size * 0.05;
 
-  var theme = options.theme || {};
+  // Theming
+  var theme = Speedometer.themes[options.theme] || Speedometer.themes.default;
+
+  if (!Speedometer.themes.default)
+    throw ('Default theme missing! Please load themes/default.js');
+
+  for (key in Speedometer.themes.default)
+    if (theme[key] == undefined)
+      theme[key] = Speedometer.themes.default[key];
 
   var Color = {
-    dial  : theme.dial   || 'Gray',
-    rim   : theme.rim    || 'SlateGray',
-    rimArc: theme.rimArc || 'Gainsboro',
-    thresh: theme.thresh || 'LawnGreen',
-    center: theme.center || 'Black',
-    nose  : theme.nose   || 'SlateGray',
+    dial  : theme.dial,
+    rim   : theme.rim,
+    rimArc: theme.rimArc,
+    thresh: theme.thresh,
+    center: theme.center,
+    nose  : theme.nose,
     hand  : {
-      main: theme.hand   || 'Black',
-      shineFrom: theme.handShineFrom || 'SlateGray',
-      shineTo  : theme.handShineTo   || 'Black'
+      main   : theme.hand,
+      shine  : theme.handShine,
+      shineTo: theme.handShineTo,
     },
     calib : {
-      ticks  : theme.ticks   || 'Black',
-      divs   : theme.divs    || 'Black',
-      strings: theme.strings || 'Black',
-      font   : theme.font    || 'Sans-Serif'
-    }
-
+      ticks  : theme.ticks,
+      marks  : theme.marks,
+      strings: theme.strings,
+      font   : theme.font
+    },
+    digits: theme.digits
   };
 
   var MinValue = options.min   || 0.0;
@@ -63,7 +73,8 @@ function Speedometer() {
 
   var Display = new DigitalDisplay ({
     element: Canvas.digits,
-    dialColor: Color.dial,
+    placeholders: Color.dial,
+    digits: Color.digits,
     width: Size
   });
 
@@ -190,7 +201,7 @@ function Speedometer() {
       context.fillStyle = Color.calib.strings;
       context.textAlign = 'center';
 
-      context.font = Math.round (Size / 23) + 'pt Sans-Serif';
+      context.font = Math.round (Size / 23) + 'pt ' + Color.calib.font;
       context.textAlignment = 'center';
       context.fillText (rulerValue, tx, ty);
 
@@ -209,7 +220,7 @@ function Speedometer() {
         var x1 = (cx + (radius - Size / 50) * Math.cos (currentAngle));
         var y1 = (cy + (radius - Size / 50) * Math.sin (currentAngle));
 
-        context.strokeStyle = Color.calib.divs;
+        context.strokeStyle = Color.calib.marks;
         context.lineWidth = Size / 100;
         context.beginPath ();
         context.moveTo (x0, y0);
@@ -335,7 +346,7 @@ function Speedometer() {
     pts[2*2+1] = cy;
 
     var g1 = context.createLinearGradient (0, 0, cx, cy);
-    g1.addColorStop (0, Color.hand.shineFrom);
+    g1.addColorStop (0, Color.hand.shine);
     g1.addColorStop (1, Color.hand.shineTo);
 
     context.fillStyle = g1;
@@ -390,5 +401,7 @@ function Speedometer() {
                             TBE.Deg2Rad (stAngle), TBE.Deg2Rad (sweepAngle),
                             /* counterclockwise = */ false);
   }
-};
-// End of class
+}; // End of class
+
+// Theming support
+Speedometer.themes = {};

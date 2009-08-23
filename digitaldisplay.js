@@ -5,8 +5,12 @@
 function DigitalDisplay (options)
 {
   var element = options.element;
-  var dialColor = options.dialColor || 'Gray';
   var width = options.width || 300;
+
+  var Color = {
+    placeholders: options.placeholders || 'Gray',
+    digits:       options.digits       || 'Gray'
+  };
 
   var context = TBE.GetElement2DContext (element);
 
@@ -34,7 +38,7 @@ function DigitalDisplay (options)
     var fixv = Math.round (value);
     var decv = (value - fixv) * 100;
 
-    context.fillStyle = dialColor;
+    context.fillStyle = Color.placeholders;
     context.globalAlpha = 40.0 / 255.0;
 
     var shift = 0, incr = 15 * width / 250;
@@ -45,7 +49,7 @@ function DigitalDisplay (options)
     }
 
     shift -= incr;
-    context.fillStyle = 'Gray';
+    context.fillStyle = Color.digits;
     context.globalAlpha = 210.0/255.0;
     for (var n = 0; n < len; n++)
     {
