@@ -175,19 +175,20 @@ function Speedometer() {
   var ticksCount = 10;
   var smallTicksCount = 3;
   var glossinessAlpha = 0.1;
+  var gapScale = 0.02;
 
   this.drawMeter = function (cx, cy)
   {
     var context = Context.background;
 
-    var gap = (Size * 0.02);
+    var gap = (Size * gapScale);
     var shift = Size / 25;
 
     var radius = (Size - gap) / 2 - gap * 5;
     var totalAngle = MeterToAngle - MeterFromAngle;
 
     var currentAngle, angleIncr;
-    var rulerValue = MinValue;
+    var incValue = (MaxValue - MinValue) / ticksCount;
 
     function drawMark (angle, options)
     {
@@ -222,13 +223,21 @@ function Speedometer() {
     for (i = 0; i <= ticksCount; i++)
     {
       // Draw thick mark and increment angle
-      drawMark (currentAngle, {size: Size / 20, width: Size / 50, color: Color.meter.ticks});
+      drawMark (currentAngle, {
+        size: Size / 20,
+        width: Size / 50,
+        color: Color.meter.ticks
+      });
 
       // Draw string and increment ruler value
-      drawString (rulerValue, {angle: currentAngle, color: Color.meter.strings, offset: Size / 10, size: Size / 23});
+      drawString (MinValue + Math.round (incValue * i), {
+        angle: currentAngle,
+        color: Color.meter.strings,
+        offset: Size / 10,
+        size: Size / 23
+      });
 
       currentAngle += angleIncr;
-      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / ticksCount));
     }
     context.stroke ();
 
@@ -315,8 +324,8 @@ function Speedometer() {
     var context = Context.hand;
 
     var radius = Size / 2 - (Size * 0.12);
-    var val = MaxValue - MinValue;
 
+    var val = MaxValue - MinValue;
     val = (MaxValue * (CurValue - MinValue)) / val;
     val = ((MeterToAngle - MeterFromAngle) * val) / MaxValue;
     val += MeterFromAngle;
@@ -405,9 +414,11 @@ function Speedometer() {
     val = (MaxValue * (ThreshPivot - MinValue)) / val;
     val = ((MeterToAngle - MeterFromAngle) * val) / MaxValue;
     val += MeterFromAngle;
+
     var stAngle = val - ((MeterRimAngle * Threshold) / MaxValue / 2);
     if (stAngle <= MeterFromAngle)
       stAngle = MeterFromAngle;
+
     var sweepAngle = ((MeterRimAngle * Threshold) / MaxValue);
     if (stAngle + sweepAngle > MeterToAngle)
       sweepAngle = MeterToAngle - stAngle;
