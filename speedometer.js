@@ -25,14 +25,14 @@ function Speedometer() {
   var y = Size * 0.05;
 
   // Theming
-  var theme = Speedometer.themes[options.theme] || Speedometer.themes.default;
+  var theme = Speedometer.themes[options.theme] || Speedometer.themes['default'];
 
-  if (!Speedometer.themes.default)
+  if (!Speedometer.themes['default'])
     throw ('Default theme missing! Please load themes/default.js');
 
-  for (key in Speedometer.themes.default)
+  for (key in Speedometer.themes['default'])
     if (theme[key] == undefined)
-      theme[key] = Speedometer.themes.default[key];
+      theme[key] = Speedometer.themes['default'][key];
 
   var Color = {
     dial  : theme.dial,

@@ -1,4 +1,4 @@
-Speedometer.themes.default = {
+Speedometer.themes['default'] = {
   dial       : 'Gray',
   rim        : 'SlateGray',
   rimArc     : 'Gainsboro',
