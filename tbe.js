@@ -1,4 +1,4 @@
-// The Binary Elevator JS library - General utility methods
+// TBE JS library - General utility methods
 //
 var TBE = {
   CreateCanvasElement: function ()
