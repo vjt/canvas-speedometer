@@ -180,18 +180,18 @@ function Speedometer() {
   {
     var context = Context.background;
 
-    var noOfParts = noOfDivisions + 1;
-    var noOfIntermediates = noOfSubDivisions;
+    var ticksCount = noOfDivisions + 1;
+    var smallTicksCount = noOfSubDivisions;
     var currentAngle = TBE.Deg2Rad (MeterFromAngle);
     var gap = (Size * 0.02);
     var shift = Size / 25;
 
     var radius = (Size - gap) / 2 - gap * 5;
     var totalAngle = MeterToAngle - MeterFromAngle;
-    var incr = TBE.Deg2Rad (totalAngle / ( (noOfParts - 1) * (noOfIntermediates + 1)));
+    var incr = TBE.Deg2Rad (totalAngle / ( (ticksCount - 1) * (smallTicksCount + 1)));
 
     var rulerValue = 0.0; // min
-    for (i = 0; i <= noOfParts; i++)
+    for (i = 0; i <= ticksCount; i++)
     {
       // Draw Thick Line
       var x0 = (cx + radius * Math.cos (currentAngle));
@@ -217,12 +217,12 @@ function Speedometer() {
       context.textAlignment = 'center';
       context.fillText (rulerValue, tx, ty);
 
-      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / (noOfParts - 1)));
+      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / (ticksCount - 1)));
 
-      if (i == noOfParts - 1)
+      if (i == ticksCount - 1)
         break;
 
-      for (j = 0; j <= noOfIntermediates; j++)
+      for (j = 0; j <= smallTicksCount; j++)
       {
         // Draw thin lines
         currentAngle += incr;
