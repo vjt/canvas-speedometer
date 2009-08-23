@@ -62,7 +62,7 @@ function Speedometer() {
       shine  : theme.handShine,
       shineTo: theme.handShineTo,
     },
-    calib : {
+    meter : {
       ticks  : theme.ticks,
       marks  : theme.marks,
       strings: theme.strings,
@@ -211,7 +211,7 @@ function Speedometer() {
       context.fillStyle = options.color;
       context.textAlign = 'center';
 
-      context.font = Math.round (options.size) + 'pt ' + Color.calib.font;
+      context.font = Math.round (options.size) + 'pt ' + Color.meter.font;
       context.textAlignment = 'center';
       context.fillText (value, tx, ty);
     }
@@ -222,10 +222,10 @@ function Speedometer() {
     for (i = 0; i <= ticksCount; i++)
     {
       // Draw thick mark and increment angle
-      drawMark (currentAngle, {size: Size / 20, width: Size / 50, color: Color.calib.ticks});
+      drawMark (currentAngle, {size: Size / 20, width: Size / 50, color: Color.meter.ticks});
 
       // Draw string and increment ruler value
-      drawString (rulerValue, {angle: currentAngle, color: Color.calib.strings, offset: Size / 10, size: Size / 23});
+      drawString (rulerValue, {angle: currentAngle, color: Color.meter.strings, offset: Size / 10, size: Size / 23});
 
       currentAngle += angleIncr;
       rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / ticksCount));
@@ -239,7 +239,7 @@ function Speedometer() {
     {
       // Draw thin mark if not overlapping a thick mark
       if (i % (smallTicksCount + 1) != 0)
-        drawMark (currentAngle, {size: Size / 50, width: Size / 100, color: Color.calib.marks});
+        drawMark (currentAngle, {size: Size / 50, width: Size / 100, color: Color.meter.marks});
 
       currentAngle += angleIncr;
     }
@@ -402,7 +402,7 @@ function Speedometer() {
     context.lineWidth = Size / 50;
 
     var val = MaxValue - MinValue
-    val = (MaxValue * (ThreshPivot - MinValue)) / val; // recommendval - min
+    val = (MaxValue * (ThreshPivot - MinValue)) / val;
     val = ((MeterToAngle - MeterFromAngle) * val) / MaxValue;
     val += MeterFromAngle;
     var stAngle = val - ((MeterRimAngle * Threshold) / MaxValue / 2);
