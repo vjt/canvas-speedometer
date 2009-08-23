@@ -172,74 +172,78 @@ function Speedometer() {
     return MaxValue;
   }
 
-  var noOfDivisions = 10;
-  var noOfSubDivisions = 3;
+  var ticksCount = 10;
+  var smallTicksCount = 3;
   var glossinessAlpha = 25 / 255.0;
 
   this.drawMeter = function (cx, cy)
   {
     var context = Context.background;
 
-    var ticksCount = noOfDivisions + 1;
-    var smallTicksCount = noOfSubDivisions;
-    var currentAngle = TBE.Deg2Rad (MeterFromAngle);
     var gap = (Size * 0.02);
     var shift = Size / 25;
 
     var radius = (Size - gap) / 2 - gap * 5;
     var totalAngle = MeterToAngle - MeterFromAngle;
-    var incr = TBE.Deg2Rad (totalAngle / ( (ticksCount - 1) * (smallTicksCount + 1)));
 
+    var currentAngle, angleIncr;
     var rulerValue = MinValue;
-    for (i = 0; i <= ticksCount; i++)
-    {
-      // Draw Thick Line
-      var x0 = (cx + radius * Math.cos (currentAngle));
-      var y0 = (cy + radius * Math.sin (currentAngle));
-      var x1 = (cx + (radius - Size / 20) * Math.cos (currentAngle));
-      var y1 = (cy + (radius - Size / 20) * Math.sin (currentAngle));
 
-      context.strokeStyle = Color.calib.ticks;
-      context.lineWidth = Size / 50;
-      context.beginPath ();
+    function drawMark (angle, options)
+    {
+      var x0 = (cx + radius * Math.cos (angle));
+      var y0 = (cy + radius * Math.sin (angle));
+      var x1 = (cx + (radius - options.size) * Math.cos (angle));
+      var y1 = (cy + (radius - options.size) * Math.sin (angle));
+
+      context.strokeStyle = options.color;
+      context.lineWidth = options.width;
       context.moveTo (x0, y0);
       context.lineTo (x1, y1);
-      context.stroke ();
+    }
 
+    function drawString (value, options)
+    {
       // Draw Strings
-      tx = cx + (radius - Size / 10) * Math.cos (currentAngle);
-      ty = cy + gap / 2 + (radius - Size / 10) * Math.sin (currentAngle);
+      tx = cx + (radius - options.offset) * Math.cos (options.angle);
+      ty = cy + gap / 2 + (radius - options.offset) * Math.sin (options.angle);
 
-      context.fillStyle = Color.calib.strings;
+      context.fillStyle = options.color;
       context.textAlign = 'center';
 
-      context.font = Math.round (Size / 23) + 'pt ' + Color.calib.font;
+      context.font = Math.round (options.size) + 'pt ' + Color.calib.font;
       context.textAlignment = 'center';
-      context.fillText (rulerValue, tx, ty);
-
-      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / (ticksCount - 1)));
-
-      if (i == ticksCount - 1)
-        break;
-
-      for (j = 0; j <= smallTicksCount; j++)
-      {
-        // Draw thin lines
-        currentAngle += incr;
-
-        var x0 = (cx + radius * Math.cos (currentAngle));
-        var y0 = (cy + radius * Math.sin (currentAngle));
-        var x1 = (cx + (radius - Size / 50) * Math.cos (currentAngle));
-        var y1 = (cy + (radius - Size / 50) * Math.sin (currentAngle));
-
-        context.strokeStyle = Color.calib.marks;
-        context.lineWidth = Size / 100;
-        context.beginPath ();
-        context.moveTo (x0, y0);
-        context.lineTo (x1, y1);
-        context.stroke ();
-      }
+      context.fillText (value, tx, ty);
     }
+
+    angleIncr = TBE.Deg2Rad (totalAngle / ticksCount);
+    currentAngle = TBE.Deg2Rad (MeterFromAngle);
+    context.beginPath ();
+    for (i = 0; i <= ticksCount; i++)
+    {
+      // Draw thick mark and increment angle
+      drawMark (currentAngle, {size: Size / 20, width: Size / 50, color: Color.calib.ticks});
+
+      // Draw string and increment ruler value
+      drawString (rulerValue, {angle: currentAngle, color: Color.calib.strings, offset: Size / 10, size: Size / 23});
+
+      currentAngle += angleIncr;
+      rulerValue = Math.round (rulerValue + ((MaxValue - MinValue) / ticksCount));
+    }
+    context.stroke ();
+
+    angleIncr = TBE.Deg2Rad (totalAngle / ticksCount / (smallTicksCount + 1));
+    currentAngle = TBE.Deg2Rad (MeterFromAngle);
+    context.beginPath ();
+    for (i = 0; i < (smallTicksCount + 1) * ticksCount; i++)
+    {
+      // Draw thin mark if not overlapping a thick mark
+      if (i % (smallTicksCount + 1) != 0)
+        drawMark (currentAngle, {size: Size / 50, width: Size / 100, color: Color.calib.marks});
+
+      currentAngle += angleIncr;
+    }
+    context.stroke ();
   }
 
   this.drawGloss = function ()
