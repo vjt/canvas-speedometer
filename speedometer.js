@@ -12,6 +12,15 @@ function Speedometer() {
 
   if (!Container) throw ('No container found!'); // XXX
 
+  // Customization
+  var MinValue = options.min   || 0.0;
+  var MaxValue = options.max   || 100.0;
+  var CurValue = options.value || 0.0;
+
+  // Threshold
+  var Threshold   = options.threshold      || 50.0;
+  var ThreshPivot = options.thresholdPivot || 35.0;
+
   // Container CSS inspection to get computed size
   var ContainerStyle = TBE.GetElementComputedStyle (Container);
   var Size = Math.min (
@@ -55,10 +64,8 @@ function Speedometer() {
     digits: theme.digits
   };
 
-  var MinValue = options.min   || 0.0;
-  var MaxValue = options.max   || 100.0;
-  var CurValue = options.value || 0.0;
-
+  // Private stuff.
+  //
   var Canvas = {
     background: TBE.CreateSquareCanvasElement (Size),
     foreground: TBE.CreateSquareCanvasElement (Size),
@@ -160,7 +167,6 @@ function Speedometer() {
 
   var fromAngle = 135.0;
   var toAngle = 405.0;
-  var threshold = 40.0;
   var noOfDivisions = 10;
   var noOfSubDivisions = 3;
   var glossinessAlpha = 25 / 255.0;
@@ -388,13 +394,13 @@ function Speedometer() {
     // context.globalAlpha = 200.0 / 255.0;
 
     var val = MaxValue - MinValue
-    val = (MaxValue * (35.0 - MinValue)) / val; // recommendval - min
+    val = (MaxValue * (ThreshPivot - MinValue)) / val; // recommendval - min
     val = ((toAngle - fromAngle) * val) / 100;
     val += fromAngle;
-    var stAngle = val - ((270 * threshold) / 200);
+    var stAngle = val - ((270 * Threshold) / 200);
     if (stAngle <= 135)
       stAngle = 135;
-    var sweepAngle = ((270 * threshold) / 100);
+    var sweepAngle = ((270 * Threshold) / 100);
     if (stAngle + sweepAngle > 405)
       sweepAngle = 405 - stAngle;
 
