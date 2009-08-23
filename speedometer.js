@@ -178,7 +178,7 @@ function Speedometer() {
     var noOfParts = noOfDivisions + 1;
     var noOfIntermediates = noOfSubDivisions;
     var currentAngle = TBE.Deg2Rad (fromAngle);
-    var gap = (Size * 0.021);
+    var gap = (Size * 0.02);
     var shift = Size / 25;
 
     var radius = (Size - gap) / 2 - gap * 5;
