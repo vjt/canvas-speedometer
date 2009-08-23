@@ -174,7 +174,7 @@ function Speedometer() {
 
   var ticksCount = 10;
   var smallTicksCount = 3;
-  var glossinessAlpha = 25 / 255.0;
+  var glossinessAlpha = 0.1;
 
   this.drawMeter = function (cx, cy)
   {
@@ -376,7 +376,7 @@ function Speedometer() {
     // Draw background color
     context.fillStyle = Color.dial;
     context.ellipse (x, y, w, h);
-    context.globalAlpha = 120.0 / 255.0;
+    context.globalAlpha = 0.45;
     context.fill ();
 
     // Draw Rim
@@ -400,7 +400,6 @@ function Speedometer() {
     // Draw Threshold
     context.strokeStyle = Color.thresh;
     context.lineWidth = Size / 50;
-    // context.globalAlpha = 200.0 / 255.0;
 
     var val = MaxValue - MinValue
     val = (MaxValue * (ThreshPivot - MinValue)) / val; // recommendval - min
