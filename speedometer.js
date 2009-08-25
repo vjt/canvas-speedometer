@@ -31,6 +31,12 @@ function Speedometer() {
   var MeterGapScale   = (options.meterGapScale || 10) / 100.0;
   if (MeterGapScale > 1) MeterGapScale = 1;
 
+  // Glossy?
+  var Glossy = Boolean (options.glossy) || true;
+
+  // Enable digital display?
+  var Display = Boolean (options.display) || true;
+
   // Correct given coords (cartesian) to the canvas std plane
 
   // Container CSS inspection to get computed size
@@ -91,12 +97,15 @@ function Speedometer() {
     hand      : TBE.GetElement2DContext (Canvas.hand)
   };
 
-  var Display = new DigitalDisplay ({
-    element: Canvas.digits,
-    placeholders: Color.dial,
-    digits: Color.digits,
-    width: Size
-  });
+  if (Display)
+  {
+    Display = new DigitalDisplay ({
+      element: Canvas.digits,
+      placeholders: Color.dial,
+      digits: Color.digits,
+      width: Size
+    });
+  }
 
   // Now append the canvases into the given container
   //
@@ -122,7 +131,8 @@ function Speedometer() {
       this.drawCenter ((w / 2) + x, (h / 2) + y);
       this.drawGloss ();
 
-      Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
+      if (Display)
+        Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
     }
   }
 
@@ -256,8 +266,13 @@ function Speedometer() {
 
   this.drawGloss = function ()
   {
+    if (!Glossy)
+      return;
+
     var context = Context.foreground;
 
+    // Draw dial glossiness
+    //
     var rX = Size * 0.15;
     var rY = y + Size * 0.07;
     var rW = Size * 0.70;
@@ -270,6 +285,11 @@ function Speedometer() {
     context.fillStyle = g1;
     context.fillEllipse (rX, rY, rW, rH);
 
+    if (!Display)
+      return;
+
+    // Draw display glossiness
+    //
     rX = Size * 0.30;
     rY = y + Size * 0.70;
     rW = Size * 0.40;
