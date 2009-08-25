@@ -26,6 +26,11 @@ function Speedometer() {
   var MeterToAngle   = (options.meterToAngle   ||  135.0) - 90.0;
   var MeterRimAngle  = MeterToAngle - MeterFromAngle;
 
+  var MeterTicksCount = options.meterTicksCount || 10;
+  var MeterMarksCount = options.meterMarksCount || 3;
+  var MeterGapScale   = (options.meterGapScale || 10) / 100.0;
+  if (MeterGapScale > 1) MeterGapScale = 1;
+
   // Correct given coords (cartesian) to the canvas std plane
 
   // Container CSS inspection to get computed size
@@ -172,23 +177,17 @@ function Speedometer() {
     return MaxValue;
   }
 
-  var ticksCount = 10;
-  var smallTicksCount = 3;
-  var glossinessAlpha = 0.1;
-  var gapScale = 0.02;
-
   this.drawMeter = function (cx, cy)
   {
     var context = Context.background;
 
-    var gap = (Size * gapScale);
-    var shift = Size / 25;
+    var gap = (Size * (MeterGapScale + 0.5) * 0.03);
 
     var radius = (Size - gap) / 2 - gap * 5;
     var totalAngle = MeterToAngle - MeterFromAngle;
 
     var currentAngle, angleIncr;
-    var incValue = (MaxValue - MinValue) / ticksCount;
+    var incValue = (MaxValue - MinValue) / MeterTicksCount;
 
     function drawMark (angle, options)
     {
@@ -217,10 +216,10 @@ function Speedometer() {
       context.fillText (value, tx, ty);
     }
 
-    angleIncr = TBE.Deg2Rad (totalAngle / ticksCount);
+    angleIncr = TBE.Deg2Rad (totalAngle / MeterTicksCount);
     currentAngle = TBE.Deg2Rad (MeterFromAngle);
     context.beginPath ();
-    for (i = 0; i <= ticksCount; i++)
+    for (i = 0; i <= MeterTicksCount; i++)
     {
       // Draw thick mark and increment angle
       drawMark (currentAngle, {
@@ -241,13 +240,13 @@ function Speedometer() {
     }
     context.stroke ();
 
-    angleIncr = TBE.Deg2Rad (totalAngle / ticksCount / (smallTicksCount + 1));
+    angleIncr = TBE.Deg2Rad (totalAngle / MeterTicksCount / (MeterMarksCount + 1));
     currentAngle = TBE.Deg2Rad (MeterFromAngle);
     context.beginPath ();
-    for (i = 0; i < (smallTicksCount + 1) * ticksCount; i++)
+    for (i = 0; i < (MeterMarksCount + 1) * MeterTicksCount; i++)
     {
       // Draw thin mark if not overlapping a thick mark
-      if (i % (smallTicksCount + 1) != 0)
+      if (i % (MeterMarksCount + 1) != 0)
         drawMark (currentAngle, {size: Size / 50, width: Size / 100, color: Color.meter.marks});
 
       currentAngle += angleIncr;
