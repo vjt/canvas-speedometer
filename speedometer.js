@@ -134,8 +134,10 @@ function Speedometer(element) {
 
   this.update = function (value)
   {
-    if (value > MaxValue || value < MinValue)
-      return false;
+    if (value > MaxValue)
+      value = MaxValue;
+    else if (value < MinValue)
+      value = MinValue;
 
     CurValue = value;
 
@@ -154,7 +156,7 @@ function Speedometer(element) {
       Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
     }
 
-    return true;
+    return value;
   }
 
   /* XXX TODO

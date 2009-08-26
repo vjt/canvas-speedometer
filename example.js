@@ -1,19 +1,25 @@
 var ClockWise = 1, CounterClockWise = 2;
-var updateDir = ClockWise, incr = 0.15;
+var updateDir = ClockWise, incr = 0.35;
 
 function incrementalUpdate ()
 {
+  var val;
   if (updateDir == ClockWise)
   {
-    if (!speedometer.update (speedometer.value() + incr))
+    val = speedometer.value() + incr;
+
+    // if clipping occurs, we reached the maximum value
+    if (val != speedometer.update (val))
     {
-      speedometer.update (speedometer.max());
       updateDir = CounterClockWise;
     }
   }
   else if (updateDir == CounterClockWise)
   {
-    if (!speedometer.update (speedometer.value() - incr))
+    val = speedometer.value() - incr;
+
+    // if clipping occurs, we reached the minimum value
+    if (val != speedometer.update (val))
     {
       speedometer.update (speedometer.min());
       updateDir = ClockWise;
