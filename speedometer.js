@@ -3,14 +3,21 @@
 //
 // Project home page: http://github.com/vjt/canvas-speedometer
 //
-function Speedometer() {
-  var options = arguments[0] || {};
+function Speedometer(element) {
+  var options = arguments[1] || {};
 
-  var Container = document.getElementById(
-    options.element || 'speedometer'
-  );
+  var Container = document.getElementById(element || 'speedometer');
 
   if (!Container) throw ('No container found!'); // XXX
+
+  // Container CSS inspection to get computed size
+  var ContainerStyle = TBE.GetElementComputedStyle (Container);
+  var Size = Math.min (
+    parseInt (ContainerStyle.width),
+    parseInt (ContainerStyle.height)
+  );
+
+  if (!Size) throw ('Cannot get container dimensions!');
 
   // Customization
   var MinValue = options.min   || 0.0;
@@ -37,25 +44,14 @@ function Speedometer() {
   // Enable digital display?
   var Display = Boolean (options.display) || true;
 
-  // Correct given coords (cartesian) to the canvas std plane
-
-  // Container CSS inspection to get computed size
-  var ContainerStyle = TBE.GetElementComputedStyle (Container);
-  var Size = Math.min (
-    parseInt (ContainerStyle.width),
-    parseInt (ContainerStyle.height)
-  );
-
-  if (!Size) throw ('Cannot get container dimensions!');
-
   var x = Size * 0.05;
   var y = Size * 0.05;
 
   // Theming
-  var theme = Speedometer.themes[options.theme] || Speedometer.themes['default'];
-
   if (!Speedometer.themes['default'])
     throw ('Default theme missing! Please load themes/default.js');
+
+  var theme = Speedometer.themes[options.theme] || Speedometer.themes['default'];
 
   for (key in Speedometer.themes['default'])
     if (theme[key] == undefined)

@@ -19,10 +19,10 @@
           // $(document).ready() on jQuery, Event.observe('dom:loaded') on prototype,
           // and so on.
           document.addEventListener ("DOMContentLoaded", function() {
-            document.removeEventListener ("DOMContentLoaded", arguments.callee, false );
+            document.removeEventListener ("DOMContentLoaded", arguments.callee, false);
 
             // Available options will be documented soon.
-            speedometer = new Speedometer ({element: 'speedometer', theme: 'default'});
+            speedometer = new Speedometer ('speedometer', {theme: 'default'});
             speedometer.draw (); // API will be documented soon, as well :).
 
             var controls = new Controls ();
