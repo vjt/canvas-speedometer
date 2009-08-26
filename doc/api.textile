@@ -1,0 +1,44 @@
+h1. API
+
+The speedometer currently has a very simple API, composed of few functions.
+
+h3. <code>new Speedometer (*element*, *options* = {})<code>
+_Description_: constructor
+_Purpose_: create a new speedometer instance
+_Parameters_:
+* String *element*: the DOM id of the speedometer container
+* Object *options*: an hash of options for configuration, as documented in doc/configuration.textile
+_Returns_: Object - a new speedometer instance
+
+
+h3. <code>draw ()</code>
+_Description_: main drawing function
+_Purpose_: draw all the gauge components - background, meter, gloss, display, hand
+_Parameters_: _none_
+_Returns_: _nothing_
+
+
+h3. <code>update (*value*)</code>
+_Description_: update the speedometer instance to a new value, clipping to the configured maximum and minimum
+_Purpose_: set the current value, move the hand, update the display
+_Parameters_:
+* Integer *value*: the new value to set
+_Returns_: Integer - the value set
+
+
+h3. <code>value ()</code>
+_Description_: getter
+_Parameters_: _none_
+_Returns_: Integer - the current value of the speedometer instance
+
+
+h3. <code>min ()</code>
+_Description_: getter
+_Parameters_: _none_
+_Returns_: Integer - the minimum value of the speedometer instance
+
+
+h3. <code>max ()</code>
+_Description_: getter
+_Parameters_: _none_
+_Returns_: Integer - the maximum value of the speedometer instance
