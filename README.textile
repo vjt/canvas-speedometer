@@ -2,15 +2,13 @@ h1. Canvas Speedometer
 
 This is a simple speedometer widget implemented using the standard HTML5 Canvas APIs.
 
-It has been tested on Webkit (Safari/Chrome) and Gecko (Firefox/Iceweasel/...).
-It currently doesn't work on IE.
+It has been tested on Webkit (Safari/Chrome) and Gecko (Firefox/Iceweasel/...). It currently doesn't work on IE.
 
 You can watch a demo "here":http://sindro.me/t/speedometer/speedometer.html
 
 h1. Documentation
 
-Browseable on the "github wiki":http://wiki.github.com/vjt/canvas-speedometer and available
-in the doc/ subdirectory of the source distribution.
+Browseable on the "github wiki":http://wiki.github.com/vjt/canvas-speedometer and available in the doc/ subdirectory of the source distribution.
 
 h1. Credits
 
