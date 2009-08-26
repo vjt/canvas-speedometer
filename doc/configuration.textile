@@ -1,0 +1,43 @@
+h1. Configuration
+
+h2. Dimensions, positioning, initialization
+
+The widget MUST be rendered inside an HTML block element (a <code><div></code> is fine) from which it inherits the dimensions, set via CSS (<code>width</code> and <code>height</code>). Positioning is inherited from the container.
+
+If no container with the given id is found, an exception is thrown. Another one is thrown, as well, if the container does not have fixed dimensions set via CSS. Because the widget is square, the smallest of the two dimensions is used as the size of the widget.
+
+Initialization follows standard JavaScript object initialization techniques, e.g. <code>new</code>. The container name is passed as the first parameter of the constructor, additional parameters are passed using an inline JavaScript object.
+
+Initialization MUST happen after the DOM has been loaded and the CSS parsed, this can be accomplished using any JavaScript framework "onReady" feature (e.g. <code>$(document).ready()</code> if you're using jQuery, or <code>Event.observe('dom:loaded')</code> if you're using Prototype).
+
+h3. Initialization example
+
+For this example, we'll be using modern browsers' event listener for the DOMContentLoaded event, to make this example framework agnostic:
+
+<pre><code>
+document.addEventListener ("DOMContentLoaded", function() {
+  document.removeEventListener ("DOMContentLoaded", arguments.callee, false);
+
+  speedometer = new Speedometer ('speedometer', {theme: 'default'});
+  speedometer.draw ();
+});
+</code></pre>
+
+h2. Configuration
+
+The second parameter passed to the constructor is an inline JavaScript object that allows the user to customize various aspects of the gauge. Each property of the object is a parameter, value type is not checked so be better to pass correct values or bad things (tm) can happen.
+
+* Float *min*: minimum of the meter scale - _default *0.0*_
+* Float *max*: maximum of the meter scale - _default *100.0*_
+* Float *value*: initial value on the scale - _default *min*_
+* Float *threshold*: aperture of the threshold arc - _default *50.0*_
+* Float *thresPivot*: value on which to place the pivot of the threshold arc - _default *35.0*_
+* Float *meterFromAngle*: starting angle of the meter scale - _default *-135.0*_
+* Float *meterToAngle*: ending angle of the meter scale - _default *135.0*_
+* Integer *meterTicksCount*: number of _thick_ ticks, with a value beneath - _default *10*_
+* Integer *meterMarksCount*: number of _thin_ ticks between two _thick_ ones - _default *3*_
+* Integer *meterGapScale*: relative position of the meter from the rim, in percent - _default *10*_
+* Boolean *glossy*: whether to draw glossiness or not - _default *true*_
+* Boolean *display*: whether to enable the digital display or not - _default *true*_
+* String *theme*: see _doc/theming.txt_ for details
+
