@@ -39,10 +39,10 @@ function Speedometer(element) {
   if (MeterGapScale > 1) MeterGapScale = 1;
 
   // Glossy?
-  var Glossy = Boolean (options.glossy) || true;
+  var Glossy = options.glossy == undefined ? true : Boolean (options.glossy);
 
   // Enable digital display?
-  var Display = Boolean (options.display) || true;
+  var Display = options.display == undefined ? true : Boolean (options.display);
 
   var x = Size * 0.05;
   var y = Size * 0.05;
