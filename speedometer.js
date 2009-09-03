@@ -44,6 +44,12 @@ function Speedometer(element) {
   // Enable digital display?
   var Display = options.display == undefined ? true : Boolean (options.display);
 
+  // Enable center rim?
+  var CenterRimScale = options.centerRimScale == undefined ?
+                       0.3 : Float (options.centerRimScale);
+  var CenterScale    = options.center == undefined ?
+                       0.25 : Float (options.centerScale);
+
   var x = Size * 0.05;
   var y = Size * 0.05;
 
@@ -306,34 +312,42 @@ function Speedometer(element) {
   {
     var context = Context.foreground;
 
-    var shift = Size / 5;
+    var shift;
 
-    var rX = cx - (shift / 2);
-    var rY = cy - (shift / 2);
-    var rW = shift;
-    var rH = shift;
+    if (CenterRimScale > 0 && CenterRimScale > CenterScale)
+    {
+      shift = CenterRimScale * (Size / 2);
 
-    var g1 = context.createLinearGradient (0, rY, 0, rY + rH);
-    g1.addColorStop (0, Color.center);
-    g1.addColorStop (0.5, Color.center);
-    g1.addColorStop (1, Color.dial);
+      var rX = cx - (shift / 2);
+      var rY = cy - (shift / 2);
+      var rW = shift;
+      var rH = shift;
 
-    context.fillStyle = g1;
-    context.fillEllipse (rX, rY, rW, rH);
+      var g1 = context.createLinearGradient (0, rY, 0, rY + rH);
+      g1.addColorStop (0, Color.center);
+      g1.addColorStop (0.5, Color.center);
+      g1.addColorStop (1, Color.dial);
 
-    shift = Size / 7;
+      context.fillStyle = g1;
+      context.fillEllipse (rX, rY, rW, rH);
+    }
 
-    rX = cx - (shift / 2);
-    rY = cy - (shift / 2);
-    rW = shift;
-    rH = shift;
+    if (CenterScale > 0)
+    {
+      shift = CenterScale * (Size / 2);
 
-    var g2 = context.createLinearGradient (rX, rY, rW + rX, rY + rH);
-    g2.addColorStop (0, Color.nose);
-    g2.addColorStop (1, Color.center);
+      rX = cx - (shift / 2);
+      rY = cy - (shift / 2);
+      rW = shift;
+      rH = shift;
 
-    context.fillStyle = g2;
-    context.fillEllipse (rX, rY, rW, rH);
+      var g2 = context.createLinearGradient (rX, rY, rW + rX, rY + rH);
+      g2.addColorStop (0, Color.nose);
+      g2.addColorStop (1, Color.center);
+
+      context.fillStyle = g2;
+      context.fillEllipse (rX, rY, rW, rH);
+    }
   }
 
   this.drawHand = function (cx, cy)
