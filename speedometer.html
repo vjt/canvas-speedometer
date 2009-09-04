@@ -21,23 +21,27 @@
           document.addEventListener ("DOMContentLoaded", function() {
             document.removeEventListener ("DOMContentLoaded", arguments.callee, false);
 
-            // Available options will be documented soon.
+            // Check out configuration and API on GitHub Wiki:
+            // http://wiki.github.com/vjt/canvas-speedometer
             speedometer = new Speedometer ('speedometer', {theme: 'default'});
-            speedometer.draw (); // API will be documented soon, as well :).
+            speedometer.draw ();
+            speedometer.addEventListener ('speedometer:animateend', function () {
+              controls.start ();
+            });
 
             var controls = new Controls ();
-            controls.start.onclick ();
+            controls.start ();
           }, false);
         </script>
     </head>
     <body>
         <div id="speedometer"></div>
-        <div id="controls">
+        <form id="controls">
           <input type="button" id="start" value="start" />
           <input type="button" id="stop" value="stop" /><br />
           Operating mode:
           <input type="radio" name="mode" id="incremental" checked="checked" /> incremental
           <input type="radio" name="mode" id="random" /> random
-        </div>
+        </form>
     </body>
 </html>

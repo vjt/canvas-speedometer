@@ -1,36 +1,47 @@
-var timedUpdate;
-
 function Controls ()
 {
-  this.start = document.getElementById ('start');
-  this.stop  = document.getElementById ('stop');
+  var start = document.getElementById ('start');
+  var stop  = document.getElementById ('stop');
 
-  var start = this.start, stop = this.stop;
   var mode_incr = document.getElementById ('incremental'),
       mode_rand = document.getElementById ('random');
   var timeout;
 
-  timedUpdate = function ()
+  start.onclick = function ()
   {
+    start.disabled = true;
+    stop.disabled = false;
+
     if (mode_incr.checked)
       incrementalUpdate ();
     else if (mode_rand.checked)
       randomUpdate ();
-
-    timeout = setTimeout ('timedUpdate ()', 40);
   }
 
-  this.start.onclick = function ()
+  this.start = function ()
   {
-    start.disabled = true;
-    stop.disabled = false;
-    timedUpdate ();
+    start.onclick ();
   }
 
-  this.stop.onclick = function ()
+  stop.onclick = function ()
   {
     stop.disabled = true;
     start.disabled = false;
-    clearTimeout (timeout);
+
+    stopAnimation ();
+  }
+
+  this.stop = function ()
+  {
+    stop.onclick ();
+  }
+
+  mode_incr.onchange = mode_rand.onchange = function ()
+  {
+    if (start.disabled)
+    {
+      stop.onclick ();
+      start.onclick ();
+    }
   }
 }

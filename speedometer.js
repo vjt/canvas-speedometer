@@ -177,36 +177,94 @@ function Speedometer(Element) {
     return CurValue;
   }
 
-  this.animatedUpdate = function (value, time)
+  function dispatchAnimationEndedEvent ()
   {
-    var FPS = 25, callback = 'f' + Element;
-    var incr, timeout, speedometer = this;
+    var evt = document.createEvent ('UIEvent');
 
-    if (document[callback])
+    evt.initUIEvent ('speedometer:animateend',
+                     /* bubbles = */ false,
+                     /* cancelable = */ false,
+                     /* defaultView = */ window,
+                     /* detail = */ CurValue);
+
+    Container.dispatchEvent (evt);
+  }
+
+  var listeners = {};
+  this.addEventListener = function (evt, func)
+  {
+    if (listeners[func] == undefined)
+    {
+      console.log ("adding " + evt + " listener with " + func);
+      Container.addEventListener (evt, func, false);
+      listeners[func] = evt;
+      return true;
+    }
+    return false;
+  }
+
+  this.removeEventListener = function (evt, func)
+  {
+    if (listeners[func])
+    {
+      console.log ("removing " + evt + " listener with " + func);
+      Container.removeEventListener (evt, func, false);
+      delete listeners[func];
+      return true;
+    }
+    return false;
+  }
+
+  this.removeAllListeners = function ()
+  {
+    for (func in listeners)
+      this.removeEventListener (listeners[func], func);
+  }
+
+  var animateCallback = null;
+  this.animatedUpdate = function (value, time, callback)
+  {
+    var FPS = 25, incr, speedometer = this;
+
+    if (animateCallback)
       throw ('Animated update already running!');
 
     value = clipValue (value);
     if (value == CurValue || time <= 0.0)
-      return false;
+      throw ('Invalid parameters (value: ' + value + ', time: ' + time + ')');
+
+    if (callback)
+      this.addEventListener ('speedometer:animateend', callback, false);
 
     incr = (value - CurValue) / FPS / (time/1000);
 
-    document[callback] = function ()
+    animateCallback = function ()
     {
-      if (Math.abs (speedometer.value () - value) < Math.abs (incr))
+      var done = Math.abs (speedometer.value () - value) < Math.abs (incr);
+      if (!animateCallback || done)
       {
-        speedometer.update (value);
-        clearTimeout (timeout);
-        document[callback] = undefined;
+        if (animateCallback)
+          speedometer.stopAnimation ();
+
+        if (done)
+        {
+          speedometer.update (value);
+          dispatchAnimationEndedEvent ();
+        }
       }
       else
       {
         speedometer.update (speedometer.value () + incr);
-        timeout = setTimeout (document[callback], 1000 / FPS);
+        setTimeout (animateCallback, 1000 / FPS);
       }
     };
 
-    document[callback] ();
+    animateCallback.call ();
+  }
+
+  this.stopAnimation = function ()
+  {
+    animateCallback = null;
   }
 
   // Getters
