@@ -3,10 +3,10 @@
 //
 // Project home page: http://github.com/vjt/canvas-speedometer
 //
-function Speedometer(element) {
+function Speedometer(Element) {
   var options = arguments[1] || {};
 
-  var Container = document.getElementById(element || 'speedometer');
+  var Container = document.getElementById(Element || 'speedometer');
 
   if (!Container) throw ('No container found!'); // XXX
 
@@ -138,14 +138,26 @@ function Speedometer(element) {
     }
   }
 
+  ////////////////////
+  // Update functions
+
+  // Clip the given value to max/min
+  //
+  function clipValue (value)
+  {
+    if (value >= MaxValue)
+      return MaxValue;
+    else if (value <= MinValue)
+      return MinValue;
+    else
+      return value;
+  }
+
+  // Instantaneously update the speedometer to the given value
+  //
   this.update = function (value)
   {
-    if (value > MaxValue)
-      value = MaxValue;
-    else if (value < MinValue)
-      value = MinValue;
-
-    CurValue = value;
+    CurValue = clipValue (value);
 
     if (Context.hand)
     {
@@ -162,20 +174,43 @@ function Speedometer(element) {
       Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
     }
 
-    return value;
+    return CurValue;
   }
 
-  /* XXX TODO
-  var step, FPS = 30;
   this.animatedUpdate = function (value, time)
   {
-    if (value < MinValue || value > MaxValue || value == CurValue ||  time <= 0.0)
+    var FPS = 25, callback = 'f' + Element;
+    var incr, timeout, speedometer = this;
+
+    if (document[callback])
+      throw ('Animated update already running!');
+
+    value = clipValue (value);
+    if (value == CurValue || time <= 0.0)
       return false;
 
-    step = Math.abs (value - CurValue) / FPS
-  }
-  */
+    incr = (value - CurValue) / FPS / (time/1000);
 
+    document[callback] = function ()
+    {
+      if (Math.abs (speedometer.value () - value) < Math.abs (incr))
+      {
+        speedometer.update (value);
+        clearTimeout (timeout);
+        document[callback] = undefined;
+      }
+      else
+      {
+        speedometer.update (speedometer.value () + incr);
+        timeout = setTimeout (document[callback], 1000 / FPS);
+      }
+    };
+
+    document[callback] ();
+  }
+
+  // Getters
+  //
   this.value = function ()
   {
     return CurValue;
