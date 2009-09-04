@@ -195,7 +195,7 @@ function Speedometer(Element) {
   {
     if (listeners[func] == undefined)
     {
-      console.log ("adding " + evt + " listener with " + func);
+      //console.log ("adding " + evt + " listener with " + func);
       Container.addEventListener (evt, func, false);
       listeners[func] = evt;
       return true;
@@ -207,7 +207,7 @@ function Speedometer(Element) {
   {
     if (listeners[func])
     {
-      console.log ("removing " + evt + " listener with " + func);
+      //console.log ("removing " + evt + " listener with " + func);
       Container.removeEventListener (evt, func, false);
       delete listeners[func];
       return true;
