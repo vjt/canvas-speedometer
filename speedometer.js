@@ -246,7 +246,7 @@ function Speedometer(Element) {
     var FPS = 25, incr, speedometer = this;
 
     if (animateCallback)
-      throw ('Animated update already running!');
+      throw ('Animation already running!');
 
     value = clipValue (value);
     if (value == CurValue || time <= 0.0)
@@ -259,11 +259,10 @@ function Speedometer(Element) {
 
     animateCallback = function ()
     {
-      var done = Math.abs (speedometer.value () - value) < Math.abs (incr);
+      var done = Math.abs (CurValue - value) < Math.abs (incr);
       if (!animateCallback || done)
       {
-        if (animateCallback)
-          speedometer.stopAnimation ();
+        speedometer.stopAnimation ();
 
         if (done)
         {
@@ -273,7 +272,45 @@ function Speedometer(Element) {
       }
       else
       {
-        speedometer.update (speedometer.value () + incr);
+        speedometer.update (CurValue + incr);
+        setTimeout (animateCallback, 1000 / FPS);
+      }
+    };
+
+    animateCallback.call ();
+  }
+
+  this.animatedRescale = function (value, time, callback)
+  {
+    var FPS = 25, incr, speedometer = this;
+
+    if (animateCallback)
+      throw ('Animation already running!');
+
+    if (value == MaxValue || value <= MinValue || time <= 0.0)
+      throw ('Invalid parameters (value: ' + value + ', time: ' + time + ')');
+
+    if (callback)
+      this.addEventListener ('speedometer:animateend', callback, false);
+
+    incr = (value - MaxValue) / FPS / (time/1000);
+
+    animateCallback = function ()
+    {
+      var done = Math.abs (MaxValue - value) < Math.abs (incr);
+      if (!animateCallback || done)
+      {
+        speedometer.stopAnimation ();
+
+        if (done)
+        {
+          speedometer.rescale (value);
+          dispatchAnimationEndedEvent ();
+        }
+      }
+      else
+      {
+        speedometer.rescale(MaxValue + incr);
         setTimeout (animateCallback, 1000 / FPS);
       }
     };
