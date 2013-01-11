@@ -87,13 +87,15 @@ function Speedometer(Element) {
     background: TBE.CreateSquareCanvasElement (Size),
     foreground: TBE.CreateSquareCanvasElement (Size),
     hand      : TBE.CreateSquareCanvasElement (Size),
+    meter     : TBE.CreateSquareCanvasElement (Size),
     digits    : TBE.CreateSquareCanvasElement (Size)
   };
 
   var Context = {
     background: TBE.GetElement2DContext (Canvas.background),
     foreground: TBE.GetElement2DContext (Canvas.foreground),
-    hand      : TBE.GetElement2DContext (Canvas.hand)
+    hand      : TBE.GetElement2DContext (Canvas.hand),
+    meter     : TBE.GetElement2DContext (Canvas.meter)
   };
 
   var Position = (function (o) {
@@ -120,7 +122,8 @@ function Speedometer(Element) {
   // Now append the canvases into the given container
   //
   Container.appendChild (Canvas.background);
-  Container.appendChild (Canvas.digits);
+  Container.appendChild (Canvas.meter);
+  Container.appendChild (Canvas.digits); // TODO move in DigitalDisplay
   Container.appendChild (Canvas.hand);
   Container.appendChild (Canvas.foreground);
 
@@ -134,9 +137,11 @@ function Speedometer(Element) {
     if (Context.background && Context.foreground && Context.hand)
     {
       this.drawBackground ();
-      this.drawHand ();
       this.drawCenter ();
       this.drawGloss ();
+
+      this.drawMeter ();
+      this.drawHand ();
 
       if (Display)
         Display.drawNumber (CurValue, 3, Position.h / 1.2, Size / 9);
@@ -177,6 +182,18 @@ function Speedometer(Element) {
     }
 
     return CurValue;
+  }
+
+  this.rescale = function (val) {
+    MaxValue = val;
+
+    if (Context.meter)
+    {
+      TBE.ClearCanvas (Canvas.meter);
+      this.drawMeter ();
+    }
+
+    this.update (CurValue);
   }
 
   function dispatchAnimationEndedEvent ()
@@ -290,7 +307,7 @@ function Speedometer(Element) {
   {
     var cx = Position.cx, cy = Position.cy;
 
-    var context = Context.background;
+    var context = Context.meter;
 
     var gap = (Size * (MeterGapScale + 0.5) * 0.03);
 
@@ -529,8 +546,6 @@ function Speedometer(Element) {
     context.ellipse (x, y, w, h);
     context.globalAlpha = 1.0;
     context.stroke ();
-
-    this.drawMeter ();
 
     // Draw Colored Rim
     context.strokeStyle = Color.rimArc;
