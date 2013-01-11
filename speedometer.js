@@ -50,9 +50,6 @@ function Speedometer(Element) {
   var CenterScale    = options.center == undefined ?
                        0.25 : Float (options.centerScale);
 
-  var x = Size * 0.05;
-  var y = Size * 0.05;
-
   // Theming
   if (!Speedometer.themes['default'])
     throw ('Default theme missing! Please load themes/default.js');
@@ -99,6 +96,17 @@ function Speedometer(Element) {
     hand      : TBE.GetElement2DContext (Canvas.hand)
   };
 
+  var Position = (function (o) {
+    this.x  = Size * 0.05;
+    this.y  = Size * 0.05;
+    this.w  = Size - this.x * 2;
+    this.h  = Size - this.y * 2;
+    this.cx = this.w / 2 + this.x;
+    this.cy = this.h / 2 + this.y;
+
+    return this;
+  }).apply({});
+
   if (Display)
   {
     Display = new DigitalDisplay ({
@@ -125,16 +133,13 @@ function Speedometer(Element) {
   {
     if (Context.background && Context.foreground && Context.hand)
     {
-      var w = Size - x * 2;
-      var h = Size - y * 2;
-
-      this.drawBackground (x, y, w, h);
-      this.drawHand ((w / 2) + x, (h / 2) + y);
-      this.drawCenter ((w / 2) + x, (h / 2) + y);
+      this.drawBackground ();
+      this.drawHand ();
+      this.drawCenter ();
       this.drawGloss ();
 
       if (Display)
-        Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
+        Display.drawNumber (CurValue, 3, Position.h / 1.2, Size / 9);
     }
   }
 
@@ -161,17 +166,17 @@ function Speedometer(Element) {
 
     if (Context.hand)
     {
-      var w = Size - x * 2;
-      var h = Size - y * 2;
+      var w = Size - Position.x * 2;
+      var h = Size - Position.y * 2;
 
       TBE.ClearCanvas (Canvas.hand);
-      this.drawHand ((w / 2) + x, (h / 2) + y);
+      this.drawHand ();
     }
 
     if (Display)
     {
       Display.clear ();
-      Display.drawNumber (CurValue, 3, h / 1.2, Size / 9);
+      Display.drawNumber (CurValue, 3, Position.h / 1.2, Size / 9);
     }
 
     return CurValue;
@@ -284,8 +289,10 @@ function Speedometer(Element) {
     return MaxValue;
   }
 
-  this.drawMeter = function (cx, cy)
+  this.drawMeter = function ()
   {
+    var cx = Position.cx, cy = Position.cy;
+
     var context = Context.background;
 
     var gap = (Size * (MeterGapScale + 0.5) * 0.03);
@@ -371,7 +378,7 @@ function Speedometer(Element) {
     // Draw dial glossiness
     //
     var rX = Size * 0.15;
-    var rY = y + Size * 0.07;
+    var rY = Position.y + Size * 0.07;
     var rW = Size * 0.70;
     var rH = Size * 0.65;
 
@@ -388,7 +395,7 @@ function Speedometer(Element) {
     // Draw display glossiness
     //
     rX = Size * 0.30;
-    rY = y + Size * 0.70;
+    rY = Position.y + Size * 0.70;
     rW = Size * 0.40;
     rH = Size * 0.15;
 
@@ -401,8 +408,10 @@ function Speedometer(Element) {
     context.fillEllipse (rX, rY, rW, rH);
   }
 
-  this.drawCenter = function (cx, cy)
+  this.drawCenter = function ()
   {
+    var cx = Position.cx, cy = Position.cy;
+
     var context = Context.foreground;
 
     var shift;
@@ -443,8 +452,10 @@ function Speedometer(Element) {
     }
   }
 
-  this.drawHand = function (cx, cy)
+  this.drawHand = function ()
   {
+    var cx = Position.cx, cy = Position.cy;
+
     var context = Context.hand;
 
     var radius = Size / 2 - (Size * 0.12);
@@ -502,8 +513,11 @@ function Speedometer(Element) {
     context.fillPolygon (pts);
   }
 
-  this.drawBackground = function (x, y, w, h)
+  this.drawBackground = function ()
   {
+    var x = Position.x, y = Position.y,
+        w = Position.w, h = Position.h;
+
     var context = Context.background;
 
     // Draw background color
@@ -519,7 +533,7 @@ function Speedometer(Element) {
     context.globalAlpha = 1.0;
     context.stroke ();
 
-    this.drawMeter ((w / 2) + x, (h / 2) + y);
+    this.drawMeter ();
 
     // Draw Colored Rim
     context.strokeStyle = Color.rimArc;
