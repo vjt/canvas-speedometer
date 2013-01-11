@@ -166,9 +166,6 @@ function Speedometer(Element) {
 
     if (Context.hand)
     {
-      var w = Size - Position.x * 2;
-      var h = Size - Position.y * 2;
-
       TBE.ClearCanvas (Canvas.hand);
       this.drawHand ();
     }
