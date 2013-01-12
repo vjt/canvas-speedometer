@@ -1,47 +1,49 @@
 function Controls ()
 {
-  var start = document.getElementById ('start');
-  var stop  = document.getElementById ('stop');
+  var update = document.getElementById ('update');
 
   var mode_incr = document.getElementById ('incremental'),
       mode_rand = document.getElementById ('random');
-  var timeout;
 
-  start.onclick = function ()
+  // Animated update
+  //
+  var start_update = function ()
   {
-    start.disabled = true;
-    stop.disabled = false;
-
     if (mode_incr.checked)
       incrementalUpdate ();
     else if (mode_rand.checked)
       randomUpdate ();
+
+    update.value = 'stop';
   }
 
-  this.start = function ()
+  var stop_update = function ()
   {
-    start.onclick ();
-  }
-
-  stop.onclick = function ()
-  {
-    stop.disabled = true;
-    start.disabled = false;
-
     stopAnimation ();
+
+    update.value = 'start';
   }
 
-  this.stop = function ()
+  var updating = function ()
   {
-    stop.onclick ();
+    return update.value == 'stop';
+  }
+
+  this.start = start_update;
+
+  update.onclick = function () {
+    if (updating ())
+      stop_update ();
+    else
+      start_update ();
   }
 
   mode_incr.onchange = mode_rand.onchange = function ()
   {
-    if (start.disabled)
+    if (updating ())
     {
-      stop.onclick ();
-      start.onclick ();
+      stop_update ();
+      start_update ();
     }
   }
 }
