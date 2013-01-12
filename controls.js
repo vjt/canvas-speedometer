@@ -5,6 +5,9 @@ function Controls ()
   var mode_incr = document.getElementById ('incremental'),
       mode_rand = document.getElementById ('random');
 
+  var rescale  = document.getElementById ('rescale'),
+      maxvalue = document.getElementById ('maxvalue');
+
   // Animated update
   //
   var start_update = function ()
@@ -46,4 +49,20 @@ function Controls ()
       start_update ();
     }
   }
+
+  // Animated Rescale
+  //
+  rescale.onclick = function ()
+  {
+    var max = parseInt (maxvalue.value);
+
+    if (max == speedometer.max ())
+      return;
+
+    if (updating ())
+      stop_update ();
+
+    speedometer.animatedRescale (max, 2000);
+  }
+
 }
