@@ -144,7 +144,7 @@ function Speedometer(Element) {
       this.drawHand ();
 
       if (Display)
-        Display.drawNumber (CurValue, 3, Position.h / 1.2, Size / 9);
+        Display.drawNumber (CurValue, MaxValue.toString().length, Position.h / 1.2, Size / 9);
     }
   }
 
@@ -178,7 +178,7 @@ function Speedometer(Element) {
     if (Display)
     {
       Display.clear ();
-      Display.drawNumber (CurValue, 3, Position.h / 1.2, Size / 9);
+      Display.drawNumber (CurValue, MaxValue.toString().length, Position.h / 1.2, Size / 9);
     }
 
     return CurValue;
