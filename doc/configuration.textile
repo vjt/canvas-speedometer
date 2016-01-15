@@ -31,7 +31,7 @@ The second parameter passed to the constructor is an inline JavaScript object th
 * Float *max*: maximum of the meter scale - _default *100.0*_
 * Float *value*: initial value on the scale - _default *min*_
 * Float *threshold*: aperture of the threshold arc - _default *50.0*_
-* Float *thresPivot*: value on which to place the pivot of the threshold arc - _default *35.0*_
+* Float *thresholdPivot*: value on which to place the pivot of the threshold arc - _default *35.0*_
 * Float *meterFromAngle*: starting angle of the meter scale - _default *-135.0*_
 * Float *meterToAngle*: ending angle of the meter scale - _default *135.0*_
 * Integer *meterTicksCount*: number of _thick_ ticks, with a value beneath - _default *10*_
