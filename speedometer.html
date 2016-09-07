@@ -16,7 +16,8 @@
         <script type="text/javascript" src="example.js"></script>
         <script type="text/javascript" src="controls.js"></script>
         <script type="text/javascript">
-          var speedometer;
+          var volts, amperes;
+
           // Explicit onready listener for modern browsers. If you use a JS framework,
           // you should replace this code with your toolkit's "onReady" helpers (e.g.
           // $(document).ready() on jQuery, Event.observe('dom:loaded') on prototype,
@@ -26,26 +27,56 @@
 
             // Check out configuration and API on GitHub Wiki:
             // http://wiki.github.com/vjt/canvas-speedometer
-            speedometer = new Speedometer ('speedometer', {theme: 'default'});
-            speedometer.draw ();
-            speedometer.addEventListener ('speedometer:animateend', function () {
-              controls.start ();
+            volts = new Speedometer ('volts', {theme: 'default'});
+            volts.draw ();
+            volts.controls = new Controls ('volts-controls', {speedometer: volts});
+            volts.addEventListener ('speedometer:animateend', function () {
+              volts.controls.start ();
             });
+            volts.controls.start ();
 
-            var controls = new Controls ('volts-controls');
-            controls.start ();
+            amperes = new Speedometer ('amperes', {theme: 'default'});
+            amperes.draw ()
+            amperes.controls = new Controls ('amperes-controls', {speedometer: amperes});
+            amperes.addEventListener ('speedometer:animateend', function () {
+              amperes.controls.start ();
+            });
+            amperes.controls.start ();
+
           }, false);
         </script>
     </head>
     <body>
-        <div id="speedometer"></div>
-        <div id="controls">
-          Animate update:  <input type="button" id="update" value="start" /><br/>
-          Animate rescale: <input type="text" id="maxvalue" value="200" />
-                           <input type="button" id="rescale" value="rescale" /><br />
-          Operating mode:
-          <input type="radio" name="mode" id="incremental" checked="checked" /> incremental
-          <input type="radio" name="mode" id="random" /> random
+        <div class="demo">
+            <div id="volts" class="speedometer"></div>
+            <form id="volts-controls" class="controls">
+                Animate update:  <input type="button" name="update" value="start" /><br/>
+                Animate rescale: <input type="text" name="maxvalue" value="200" />
+                <input type="button" name="rescale" value="rescale" /><br />
+                Operating mode:
+                <label>
+                    <input type="radio" name="mode" value="incremental" checked="checked" /> incremental
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="random" /> random
+                </label>
+            </form>
+        </div>
+
+        <div class="demo">
+            <div id="amperes" class="speedometer"></div>
+            <form id="amperes-controls" class="controls">
+                Animate update:  <input type="button" name="update" value="start" /><br/>
+                Animate rescale: <input type="text" name="maxvalue" value="200" />
+                <input type="button" name="rescale" value="rescale" /><br />
+                Operating mode:
+                <label>
+                    <input type="radio" name="mode" value="incremental"  /> incremental
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="random" checked="checked"/> random
+                </label>
+            </form>
         </div>
     </body>
 </html>
