@@ -8,7 +8,7 @@ function Speedometer(Element) {
 
   var Container = document.getElementById(Element || 'speedometer');
 
-  if (!Container) throw ('No container found!'); // XXX
+  if (!Container) throw ('speedometer container not found'); // XXX
 
   // Container CSS inspection to get computed size
   var ContainerStyle = TBE.GetElementComputedStyle (Container);
