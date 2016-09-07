@@ -1,13 +1,22 @@
-div, form {
+body {
   margin: 1em auto;
 }
 
-#speedometer {
+div, form {
+  margin: 1em;
+}
+
+.demo {
+  display: inline-block;
+}
+
+.speedometer {
   width: 500px;
   height: 500px;
   border: 1px dotted red;
+  margin: 10px;
 }
 
-#controls {
+.controls {
   width: 500px;
 }
