@@ -1,28 +1,34 @@
-function Controls ()
+function Controls (controls, options)
 {
-  var update = document.getElementById ('update');
+  var speedometer = options.speedometer;
+  if (!speedometer) throw ('Please pass the speedometer object to the controls constructor');
 
-  var mode_incr = document.getElementById ('incremental'),
-      mode_rand = document.getElementById ('random');
+  var controls = document.getElementById(controls); // TODO use .querySelector
+  if (!controls) throw ('No controls container found');
 
-  var rescale  = document.getElementById ('rescale'),
-      maxvalue = document.getElementById ('maxvalue');
+  var update = controls.querySelector('[name=update]');
+
+  var mode_incr = controls.querySelector ('[name=mode][value=incremental]'),
+      mode_rand = controls.querySelector ('[name=mode][value=random]');
+
+  var rescale  = controls.querySelector ('[name=rescale]'),
+      maxvalue = controls.querySelector ('[name=maxvalue]');
 
   // Animated update
   //
   var start_update = function ()
   {
     if (mode_incr.checked)
-      incrementalUpdate ();
+      incrementalUpdate (speedometer);
     else if (mode_rand.checked)
-      randomUpdate ();
+      randomUpdate (speedometer);
 
     update.value = 'stop';
   }
 
   var stop_update = function ()
   {
-    stopAnimation ();
+    stopAnimation (speedometer);
 
     update.value = 'start';
   }

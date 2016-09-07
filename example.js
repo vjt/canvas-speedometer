@@ -1,4 +1,4 @@
-function incrementalUpdate ()
+function incrementalUpdate (speedometer)
 {
   var target = speedometer.value () < speedometer.max () ?
       speedometer.max () : speedometer.min ();
@@ -6,7 +6,7 @@ function incrementalUpdate ()
   speedometer.animatedUpdate (target, 5000);
 }
 
-function randomUpdate ()
+function randomUpdate (speedometer)
 {
   var target = Math.random () * speedometer.max ();
   var time = Math.random () * 5000;
@@ -14,7 +14,7 @@ function randomUpdate ()
   speedometer.animatedUpdate (target, time);
 }
 
-function stopAnimation ()
+function stopAnimation (speedometer)
 {
   speedometer.stopAnimation ();
 }
