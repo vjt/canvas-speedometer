@@ -29,6 +29,8 @@ The second parameter passed to the constructor is an inline JavaScript object th
 
 * Float *min*: minimum of the meter scale - _default *0.0*_
 * Float *max*: maximum of the meter scale - _default *100.0*_
+* String *units*: units displayed on the meter face - _default *<empty string>*_
+* Integer *sigDigs*: number of significant digits to render - _default *3*_
 * Float *value*: initial value on the scale - _default *min*_
 * Float *threshold*: aperture of the threshold arc - _default *50.0*_
 * Float *thresholdPivot*: value on which to place the pivot of the threshold arc - _default *35.0*_

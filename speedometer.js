@@ -8,7 +8,7 @@ function Speedometer(Element) {
 
   var Container = document.getElementById(Element || 'speedometer');
 
-  if (!Container) throw ('speedometer container not found'); // XXX
+  if (!Container) throw ('No container found!'); // XXX
 
   // Container CSS inspection to get computed size
   var ContainerStyle = TBE.GetElementComputedStyle (Container);
@@ -23,6 +23,8 @@ function Speedometer(Element) {
   var MinValue = options.min   || 0.0;
   var MaxValue = options.max   || 100.0;
   var CurValue = options.value || MinValue;
+  var SigDigs = options.sigDigs || 3;
+  var Units = options.units || "";
 
   // Threshold
   var Threshold   = options.threshold      || 50.0;
@@ -144,7 +146,7 @@ function Speedometer(Element) {
       this.drawHand ();
 
       if (Display)
-        Display.drawNumber (CurValue, MaxValue.toString().length, Position.h / 1.2, Size / 9);
+        Display.drawNumber (CurValue, SigDigs, Position.h / 1.2, Size / 9);
     }
   }
 
@@ -178,7 +180,7 @@ function Speedometer(Element) {
     if (Display)
     {
       Display.clear ();
-      Display.drawNumber (CurValue, MaxValue.toString().length, Position.h / 1.2, Size / 9);
+      Display.drawNumber (CurValue, SigDigs, Position.h / 1.2, Size / 9);
     }
 
     return CurValue;
@@ -194,6 +196,45 @@ function Speedometer(Element) {
     }
 
     this.update (CurValue);
+  }
+
+  this.reconfig = function(options) {
+    // Customization
+    MinValue = options.min   || MinValue;
+    MaxValue = options.max   || MaxValue;
+    CurValue = options.value || CurValue;
+  
+    // Threshold
+    Threshold   = options.threshold      || Threshold;
+    ThreshPivot = options.thresholdPivot || ThreshPivot;
+  
+    // Meter, and correct user coords (cartesian) to the canvas std plane coords
+    MeterFromAngle = options.meterFromAngle ? (options.meterFromAngle || -135.0) - 90.0 : MeterFromAngle;
+    MeterToAngle   = options.meterToAngle ? (options.meterToAngle   ||  135.0) - 90.0 : MeterToAngle;
+    MeterRimAngle  = options.meterRimAngle ? MeterToAngle - MeterFromAngle : MeterRimAngle;
+  
+    MeterTicksCount = options.meterTicksCount || MeterTicksCount
+    MeterMarksCount = options.meterMarksCount || MeterMarksCount
+    MeterGapScale   = options.meterGapScale ? (options.meterGapScale || 10) / 100.0 : MeterGapScale;
+    if (MeterGapScale > 1) MeterGapScale = 1;
+  
+    // Glossy?
+    Glossy = options.glossy == undefined ? Glossy : Boolean (options.glossy);
+  
+    // Enable digital display?
+    Display = options.display == undefined ? Display : Boolean (options.display);
+  
+    // Enable center rim?
+    CenterRimScale = options.centerRimScale == undefined ?
+                         CenterRimScale : Float (options.centerRimScale);
+    CenterScale    = options.center == undefined ?
+                       CenterScale : Float (options.centerScale);
+
+    if (Context.meter)
+    {
+      TBE.ClearCanvas (Canvas.meter);
+      this.drawMeter ();
+    }
   }
 
   function dispatchAnimationEndedEvent ()
@@ -380,6 +421,12 @@ function Speedometer(Element) {
       context.textAlignment = 'center';
       context.fillText (value, tx, ty);
     }
+
+    // Draw units display
+    context.fillStyle = Color.meter.strings;
+    context.font = Math.round (Size/20) + 'pt ' + Color.meter.font;
+    context.textAlign= 'center';
+    context.fillText(Units,cx,Position.h/1.35);
 
     angleIncr = TBE.Deg2Rad (totalAngle / MeterTicksCount);
     currentAngle = TBE.Deg2Rad (MeterFromAngle);
