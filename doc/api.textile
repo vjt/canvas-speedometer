@@ -2,7 +2,7 @@ h1. API
 
 The speedometer currently has a very simple API, composed of few functions.
 
-h3. <code>new Speedometer (*element*, *options* = {})<code>
+h3. <code>new Speedometer (*element*, *options* = {})</code>
 _Description_: constructor
 _Purpose_: create a new speedometer instance
 _Parameters_:
