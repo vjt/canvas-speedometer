@@ -7,8 +7,16 @@ _Description_: constructor
 _Purpose_: create a new speedometer instance
 _Parameters_:
 * String *element*: the DOM id of the speedometer container
-* Object *options*: an hash of options for configuration, as documented in doc/configuration.textile
+* Object *options*: a hash of options for configuration, as documented in doc/configuration.textile
 _Returns_: Object - a new speedometer instance
+
+
+h3. <code>reconfig (*options* = {})</code>
+_Description_: reconfigure
+_Purpose_: reconfigure the speedometer instance with different options
+_Parameters_:
+* Object *options*: a hash of options for configuration, as documented in doc/configuration.textile  Unspecified options will keep their current setting.
+_Returns_: Integer - the value set
 
 
 h3. <code>draw ()</code>

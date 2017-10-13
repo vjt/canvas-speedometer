@@ -45,9 +45,18 @@ function DigitalDisplay (options)
   this.drawNumber = function (value, len, y, height)
   {
     var segs = createSegments (height);
-    var fixv = Math.round (value);
-    var decv = (value - fixv) * 100;
+    var dotPos = 0; // the offset of the decimal point from the right most digit
+    var digs = value; // the actual digits to render
 
+    if (value) {
+      digs=value;
+      while (digs < Math.pow(10,len-1)) {
+        dotPos++;
+        digs*=10;
+      }
+    } else { digs=0; }
+    digs = Math.floor(digs);
+      
     context.fillStyle = Color.placeholders;
     context.globalAlpha = 0.15;
 
@@ -66,15 +75,21 @@ function DigitalDisplay (options)
 
     context.fillStyle = Color.digits;
     context.globalAlpha = 0.80;
+
+    if (dotPos) {
+      context.fillPolygon(offsetPolygon(off-incr*dotPos,y,createDecimalPoint(height)));
+    }
+
     for (var n = 0; n < len; n++)
     {
       off -= incr;
-      drawSingleDigit (segs, DigitsSegments[(fixv % 10)], off, y);
-      fixv = Math.floor (fixv / 10.0);
+      drawSingleDigit (segs, DigitsSegments[(digs % 10)], off, y);
+      digs = Math.floor (digs / 10.0);
       // Perform the check here so we output a 0
-      if (fixv == 0)
+      if (digs == 0)
         break;
     }
+
   }
 
   function drawSingleDigit (segs, bits, x, y)
@@ -84,6 +99,18 @@ function DigitalDisplay (options)
       if (bits & (1 << n))
       context.fillPolygon (offsetPolygon (x, y, segs[n]));
     }
+  }
+
+  function createDecimalPoint(height) {
+    var _x = function (xx) { return xx * height * xScale; }
+    var _y = function (yy) { return yy * height * yScale; }
+    var point = [ _x(-0.05), _y(1.00),
+                  _x(0.05), _y(1.00),
+                  _x(0.05), _y(0.88),
+                  _x(-0.05), _y(0.88),
+                  _x(-0.05), _y(1.00),
+                ];
+    return point;
   }
 
   function createSegments (height)
